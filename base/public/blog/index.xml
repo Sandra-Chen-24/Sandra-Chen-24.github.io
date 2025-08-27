@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Blogs on My New Hugo Site</title>
+        <title>Blogs on Sandra Chen Blog</title>
         <link>http://localhost:1313/blog/</link>
-        <description>Recent content in Blogs on My New Hugo Site</description>
+        <description>Recent content in Blogs on Sandra Chen Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
         <lastBuildDate>Wed, 27 Aug 2025 11:37:57 +0800</lastBuildDate><atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" /><item>

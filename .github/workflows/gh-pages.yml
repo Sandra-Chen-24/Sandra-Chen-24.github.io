@@ -22,13 +22,13 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.110.0'
-          extended: true # 要支援 SCSS/SASS 必須加這個
+          hugo-version: '0.134.2'   # 建議 Extended 穩定版
+          extended: true            # 要支援 SCSS/SASS 必須加這個
 
       - name: Install theme
         run: |
           rm -rf base/themes/hugo-theme-stack
-          git clone https://github.com/CaiJimmy/hugo-theme-stack.git base/themes/hugo-theme-stack
+          git clone https://github.com/CaiJimmy/hugo-theme-stack base/themes/hugo-theme-stack
 
       - name: Build
         run: hugo --minify

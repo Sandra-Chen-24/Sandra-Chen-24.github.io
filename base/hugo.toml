@@ -1,4 +1,41 @@
-baseURL = "https://example.org/"
+baseURL = "https://Sandra-Chen-24.github.io/"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Sandra Chen Blog"
 theme = "hugo-theme-stack"
+[pagination]
+  pagerSize = 5
+
+[params]
+  mainSections = ["posts"]
+  description = "Sandra Chen's personal blog powered by Hugo Stack"
+  favicon = "favicon.ico"
+
+  [params.sidebar]
+    emoji = "📝"
+    subtitle = "Notes & Writings"
+
+  [params.footer]
+    since = 2025
+
+  # OpenGraph (社群分享預覽)
+  [params.opengraph]
+    [params.opengraph.twitter]
+      site = "@SandraChen"
+      card = "summary_large_image"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 2
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true

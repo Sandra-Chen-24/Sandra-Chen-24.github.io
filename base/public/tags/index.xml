@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Tags on My New Hugo Site</title>
+        <title>Tags on Sandra Chen Blog</title>
         <link>http://localhost:1313/tags/</link>
-        <description>Recent content in Tags on My New Hugo Site</description>
+        <description>Recent content in Tags on Sandra Chen Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 27 Aug 2025 11:37:57 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Example</title>
+        <link>http://localhost:1313/tags/example/</link>
+        <pubDate>Wed, 27 Aug 2025 11:37:57 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/example/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Hugo</title>
+        <link>http://localhost:1313/tags/hugo/</link>
+        <pubDate>Wed, 27 Aug 2025 11:37:57 +0800</pubDate>
+        
+        <guid>http://localhost:1313/tags/hugo/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Css</title>
         <link>http://localhost:1313/tags/css/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>

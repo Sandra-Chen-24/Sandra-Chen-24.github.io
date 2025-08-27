@@ -33,3 +33,4 @@ go.work.sum
 
 # Custom files
 themes/
+*.lock
