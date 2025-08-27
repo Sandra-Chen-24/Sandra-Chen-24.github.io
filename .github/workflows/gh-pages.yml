@@ -23,6 +23,7 @@ jobs:
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.110.0'
+          extended: true # 要支援 SCSS/SASS 必須加這個
 
       - name: Install theme
         run: |
