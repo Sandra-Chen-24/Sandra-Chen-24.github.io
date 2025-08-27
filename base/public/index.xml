@@ -6,29 +6,7 @@
         <description>Recent content on My New Hugo Site</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Wed, 27 Aug 2025 11:58:48 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>About</title>
-        <link>http://localhost:1313/about/</link>
-        <pubDate>Wed, 27 Aug 2025 11:58:48 +0800</pubDate>
-        
-        <guid>http://localhost:1313/about/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>My First Post</title>
-        <link>http://localhost:1313/blog/my-first-post/</link>
-        <pubDate>Wed, 27 Aug 2025 11:37:57 +0800</pubDate>
-        
-        <guid>http://localhost:1313/blog/my-first-post/</guid>
-        <description>&lt;p&gt;這是我的第一篇 Hugo 文章！&lt;/p&gt;
-&lt;h2 id=&#34;小節&#34;&gt;小節
-&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;支援 Markdown 語法&lt;/li&gt;
-&lt;li&gt;可以用 shortcode 插入圖片或程式碼&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        </item>
-        <item>
+        <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Chinese Test</title>
         <link>http://localhost:1313/post/chinese-test/test-chinese/</link>
         <pubDate>Wed, 09 Sep 2020 00:00:00 +0000</pubDate>

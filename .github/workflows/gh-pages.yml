@@ -24,6 +24,11 @@ jobs:
         with:
           hugo-version: '0.110.0'
 
+      - name: Install theme
+        run: |
+          rm -rf base/themes/hugo-theme-stack
+          git clone https://github.com/CaiJimmy/hugo-theme-stack.git base/themes/hugo-theme-stack
+
       - name: Build
         run: hugo --minify
 
