@@ -27,12 +27,11 @@ jobs:
 
       - name: Install theme
         run: |
-          rm -rf base/themes/hugo-theme-stack
-          git clone https://github.com/CaiJimmy/hugo-theme-stack base/themes/hugo-theme-stack
+          rm -rf themes/hugo-theme-stack
+          git clone https://github.com/CaiJimmy/hugo-theme-stack themes/hugo-theme-stack
 
       - name: Build
         run: hugo --minify
-        working-directory: ./base
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

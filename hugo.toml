@@ -1,5 +1,5 @@
-baseURL = "https://Sandra-Chen-24.github.io/"
-languageCode = "en-us"
+baseURL = "https://sandra-chen-24.github.io/"
+languageCode = "zh-tw"
 title = "Sandra Chen Blog"
 theme = "hugo-theme-stack"
 [pagination]
