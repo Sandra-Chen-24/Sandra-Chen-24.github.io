@@ -1,0 +1,5 @@
+FROM ubuntu:22.04
+WORKDIR /otel
+RUN apt-get update && apt-get install -y ca-certificates curl less vim net-tools iputils-ping
+COPY --from=otel/opentelemetry-collector-contrib:0.129.1 /otelcol-contrib /otel/otelcol-contrib
+ENTRYPOINT ["/otel/otelcol-contrib"]
