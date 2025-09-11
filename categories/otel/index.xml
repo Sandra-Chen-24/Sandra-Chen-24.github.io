@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Otel on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/otel/</link><description>Recent content in Otel on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 10 Sep 2025 13:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/otel/index.xml" rel="self" type="application/rss+xml"/><item><title>可觀測性</title><link>https://sandra-chen-24.github.io/blog/otel/otel-collector/</link><pubDate>Wed, 10 Sep 2025 13:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/otel/otel-collector/</guid><description>&lt;h2 id="opentelemetry-collector">OpenTelemetry Collector
+&lt;/h2>&lt;h3 id="apps-用途說明">apps 用途說明
+&lt;/h3>&lt;h4 id="otel-agent-daemonset">otel-agent (daemonset)
+&lt;/h4>&lt;p>負責採集節點上面的 log &amp;amp; metric (採集服務資訊)&lt;/p>
+&lt;ul>
+&lt;li>receiver
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator" target="_blank" rel="noopener"
+>receivercreator&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>processor&lt;/li>
+&lt;li>exporter&lt;/li>
+&lt;li>extension
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver" target="_blank" rel="noopener"
+>k8s_observer&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="otel-cluster-agent-deployment">otel-cluster-agent (deployment)
+&lt;/h4>&lt;p>負責採集叢集 metric (採集系統資訊，用 daemonset 可能重複送)&lt;/p>
+&lt;h4 id="otel-gateway-deployment">otel-gateway (deployment)
+&lt;/h4>&lt;p>匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])&lt;/p>
+&lt;h4 id="collector-deployment">collector (deployment)
+&lt;/h4>&lt;p>接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)&lt;/p>
+&lt;h4 id="otelcol-gateway--agent">Otelcol Gateway &amp;amp; Agent
+&lt;/h4>&lt;ul>
+&lt;li>Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck&lt;/li>
+&lt;li>Otelcol Agent：每個 gcp 專案會建立一個，收集專案中服務的 otel 資料傳送至 Otelcol Gateway&lt;/li>
+&lt;li>想使用 otel 的服務，需要調整程式，然後加上 env:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>extraEnvs:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: OTEL_SERVICE_NAME
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: odin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: OTEL_RESOURCE_ATTRIBUTES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: &amp;gt;-
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> env=dev,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dept=pdbm,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> product=bbin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: OTEL_EXPORTER_OTLP_PROTOCOL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: grpc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: OTEL_EXPORTER_OTLP_ENDPOINT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: http://collector.opentelemetry:4317
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="otelcol-配置">Otelcol 配置
+&lt;/h4>&lt;ul>
+&lt;li>
+&lt;p>collector = receivers + processors + exporters&lt;/p>
+&lt;ul>
+&lt;li>receivers: 從外部系統收資料（metrics / logs / traces）&lt;/li>
+&lt;li>processors: 在 pipeline 中對資料做處理（e.g. 篩選、轉換、打標籤、聚合）&lt;/li>
+&lt;li>exporters: 把資料送到外部目的地（e.g. Datadog、OTLP、S3）&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>extensions：擴充 collector 的功能&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>connectors：擴充 pipeline 的功能 [中繼處理或橋接的元件]&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>datadog/connector: 把資料轉給 Datadog。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>forward/datadog: 單純做轉發&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>內部 exporter + receiver&lt;/p>
+&lt;ul>
+&lt;li>讓資料從一個 pipeline 流向另一個 pipeline&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>pipelines:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Logs pipelines -&amp;gt; 服務透過 otel 傳送到 collector，collector 再傳到 datadog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> logs:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> logs/datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, batch/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [datadog]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>做 failover / forward&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>pipelines:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [failover/traces, datadog/connector]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces/nop:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [failover/traces]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [nop]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>${env:MY_POD_IP} -&amp;gt; otelcol 底層有處理，才能這樣設定取 env 的值&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># exporters、processors、receivers [定義]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>## helmfile/common/otel-collector -&amp;gt; Otelcol Agent
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>## helmfile/pd/observability/apps/otel-collector -&amp;gt; Otelcol Gateway
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>config:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> api:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> resource_attributes_as_tags: true
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otlp/elastic-apm: --&amp;gt; eck 服務
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> balancer_name: round_robin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endpoint: dns:///eck-apm-server-apm-http:8200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> extensions:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> health_check:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endpoint: ${env:MY_POD_IP}:13133
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: -&amp;gt; 效能優化及資料處理
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> batch: {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> batch/datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # See https://docs.datadoghq.com/opentelemetry/setup/collector_exporter/#batch-processor-configuration
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> send_batch_max_size: 100
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> send_batch_size: 10
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timeout: 10s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memory_limiter:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> check_interval: 5s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> limit_percentage: 80
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> spike_limit_percentage: 25
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> k8sattributes: {} -&amp;gt; 可以設定使用 k8s 上的 tag
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> resource: {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> transform/elastic-apm:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> error_mode: ignore
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> log_statements: &amp;amp;statements
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - conditions:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - resource.attributes[&amp;#34;product&amp;#34;] != nil and resource.attributes[&amp;#34;env&amp;#34;] != nil
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> statements:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - set(resource.attributes[&amp;#34;deployment.environment.name&amp;#34;], Concat([resource.attributes[&amp;#34;product&amp;#34;], resource.attributes[&amp;#34;env&amp;#34;]], &amp;#34; &amp;#34;))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otlp:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> protocols:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> grpc:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endpoint: ${env:MY_POD_IP}:4317
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> http:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endpoint: ${env:MY_POD_IP}:4318
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otelarrow: -&amp;gt; gateway 使用，會壓縮
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> protocols:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> grpc:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endpoint: ${env:MY_POD_IP}:4319
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prometheus:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># pipeline [使用]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># common/otel-collector -&amp;gt; Otelcol Agent
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> extensions: [zpages, health_check] -&amp;gt; zpages 可以看 collector 設定
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pipelines:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Logs pipelines -&amp;gt; 服務透過 otel 傳送到 collector，collector 再傳到 datadog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> logs:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Metrics pipelines -&amp;gt; 服務透過 otel / prometheus 傳送到 collector，collector 再傳到 datadog
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp, prometheus]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Traces pipelines
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [failover/traces, datadog/connector]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces/main:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [failover/traces]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, filter/traces, probabilistic_sampler, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [otelarrow/gateway]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces/nop:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [failover/traces]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [nop] -&amp;gt; failover 把資料丟掉，防止累積大量資料把 collector 用爆
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Datadog pipelines
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> logs/datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, batch/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics/datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [forward/datadog, datadog/connector]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, batch/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># helmfile/pd/observability/apps/otel-collector -&amp;gt; Otelcol Gateway
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> extensions: [health_check]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pipelines:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Telemetry pipelines
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics/telemetry:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [prometheus]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, k8sattributes, resource]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Datadog pipelines
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics/datadog:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [forward/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, batch/datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [datadog]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # Gateway pipelines -&amp;gt; 服務透過 otel / otelarrow 傳送到 collector，collector 再傳到 eck
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> logs:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp, otelarrow]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, transform/elastic-apm, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [otlp/elastic-apm]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metrics:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp, otelarrow]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, transform/elastic-apm, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [otlp/elastic-apm]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> traces:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp, otelarrow]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, transform/elastic-apm, batch]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [otlp/elastic-apm]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="metric-scope">metric scope
+&lt;/h2>&lt;ul>
+&lt;li>看 metric 是從哪邊來的&lt;/li>
+&lt;/ul></description></item></channel></rss>
