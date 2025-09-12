@@ -11,28 +11,10 @@ categories = ["otel"]
 
 ### apps 用途說明
 
-#### otel-agent (daemonset)
-
-負責採集節點上面的 log & metric (採集服務資訊)
-
-- receiver
-  - [receivercreator](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator)
-- processor
-- exporter
-- extension
-  - [k8s_observer](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver)
-
-#### otel-cluster-agent (deployment)
-
-負責採集叢集 metric (採集系統資訊，用 daemonset 可能重複送)
-
-#### otel-gateway (deployment)
-
-匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])
-
-#### collector (deployment)
-
-接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)
+- collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)
+- otel-agent (daemonset): 負責採集節點上面的 log & metric (採集服務資訊)
+- otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送)
+- otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])
 
 #### Otelcol Gateway & Agent
 
@@ -56,6 +38,42 @@ extraEnvs:
 ```
 
 #### Otelcol 配置
+
+[參考 chart](https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-collector/values.yaml )
+
+[receiver - receivercreator](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator)
+
+[extension - k8s_observer](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver)
+
+[Important Components for Kubernetes](https://opentelemetry.io/docs/platforms/kubernetes/collector/components/)
+
+- chart 設置注意
+  - 因為有使用 datadog agent 會衝到 port，要記得調整設定
+
+    ```text
+    config:
+      receivers:
+        otlp: null
+
+    ports:
+      otlp: { enabled: false }
+      otlp-http: { enabled: false }
+    ```
+
+  - collector-agent、collector-cluster-agent 要加 presets 區塊設定
+
+  - pipeline 設置可以先 plan 看 config 中有哪些 receivers、processors、exporters、extensions、connectors，再調整，不需要的也可以蓋掉
+
+    ```text
+    receivers:
+      jaeger: null
+      zipkin: null
+    ```
+
+  - README.md 中資訊
+    - Status
+      - Stability -> 看屬於哪個類型使用 [log, traces, traces]
+      - Distributions -> 判斷是否已啟用
 
 - collector = receivers + processors + exporters
   - receivers: 從外部系統收資料（metrics / logs / traces）
@@ -231,6 +249,41 @@ service:
         exporters: [otlp/elastic-apm]
 ```
 
-## metric scope
+#### collector-agent vs collector-cluster-agent
 
-- 看 metric 是從哪邊來的
+##### metric 相關
+
+- scope:判斷 metric 是從哪個套件來的
+
+- collector-agent
+
+  ```text
+  (37) 服務指標
+    - (13) k8s.pod.*
+    - (13) k8s.node.*
+    - (11) container.*
+  ```
+
+- collector-cluster-agent
+
+  ```text
+  (33) 服務指標
+    - (4) k8s.statefulset.*
+    - k8s.resource_quota.used
+    - k8s.resource_quota.hard_limit
+    - (2) k8s.replicaset.*
+    - k8s.pod.phase
+    - k8s.node.condition_ready
+    - k8s.namespace.phase
+    - (5) k8s.job.*
+    - (4) k8s.hpa.*
+    - (2) k8s.deployment.*
+    - (4) k8s.daemonset.*
+    - k8s.cronjob.active_jobs
+    - (6) k8s.container.*
+  ```
+
+##### log 相關
+
+- collector-agent: 服務訪問 log
+- collector-cluster-agent: event 相關 log (e.g. 服務被建立、job 執行)
