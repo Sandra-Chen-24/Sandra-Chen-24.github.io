@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Otel on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/otel/</link><description>Recent content in Otel on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 10 Sep 2025 13:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/otel/index.xml" rel="self" type="application/rss+xml"/><item><title>可觀測性</title><link>https://sandra-chen-24.github.io/blog/otel/otel-collector/</link><pubDate>Wed, 10 Sep 2025 13:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/otel/otel-collector/</guid><description>&lt;h2 id="opentelemetry-collector">OpenTelemetry Collector
 &lt;/h2>&lt;h3 id="apps-用途說明">apps 用途說明
-&lt;/h3>&lt;h4 id="otel-agent-daemonset">otel-agent (daemonset)
-&lt;/h4>&lt;p>負責採集節點上面的 log &amp;amp; metric (採集服務資訊)&lt;/p>
-&lt;ul>
-&lt;li>receiver
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator" target="_blank" rel="noopener"
->receivercreator&lt;/a>&lt;/li>
+&lt;/h3>&lt;ul>
+&lt;li>collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)&lt;/li>
+&lt;li>otel-agent (daemonset): 負責採集節點上面的 log &amp;amp; metric (採集服務資訊)&lt;/li>
+&lt;li>otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送)&lt;/li>
+&lt;li>otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])&lt;/li>
 &lt;/ul>
-&lt;/li>
-&lt;li>processor&lt;/li>
-&lt;li>exporter&lt;/li>
-&lt;li>extension
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver" target="_blank" rel="noopener"
->k8s_observer&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h4 id="otel-cluster-agent-deployment">otel-cluster-agent (deployment)
-&lt;/h4>&lt;p>負責採集叢集 metric (採集系統資訊，用 daemonset 可能重複送)&lt;/p>
-&lt;h4 id="otel-gateway-deployment">otel-gateway (deployment)
-&lt;/h4>&lt;p>匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])&lt;/p>
-&lt;h4 id="collector-deployment">collector (deployment)
-&lt;/h4>&lt;p>接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)&lt;/p>
 &lt;h4 id="otelcol-gateway--agent">Otelcol Gateway &amp;amp; Agent
 &lt;/h4>&lt;ul>
 &lt;li>Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck&lt;/li>
@@ -43,7 +25,50 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - name: OTEL_EXPORTER_OTLP_ENDPOINT
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> value: http://collector.opentelemetry:4317
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="otelcol-配置">Otelcol 配置
-&lt;/h4>&lt;ul>
+&lt;/h4>&lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-collector/values.yaml" target="_blank" rel="noopener"
+>參考 chart&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator" target="_blank" rel="noopener"
+>receiver - receivercreator&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver" target="_blank" rel="noopener"
+>extension - k8s_observer&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://opentelemetry.io/docs/platforms/kubernetes/collector/components/" target="_blank" rel="noopener"
+>Important Components for Kubernetes&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>chart 設置注意&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>因為有使用 datadog agent 會衝到 port，要記得調整設定&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>config:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otlp: null
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ports:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otlp: { enabled: false }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> otlp-http: { enabled: false }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>collector-agent、collector-cluster-agent 要加 presets 區塊設定&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>pipeline 設置可以先 plan 看 config 中有哪些 receivers、processors、exporters、extensions、connectors，再調整，不需要的也可以蓋掉&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>receivers:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> jaeger: null
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> zipkin: null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>README.md 中資訊&lt;/p>
+&lt;ul>
+&lt;li>Status
+&lt;ul>
+&lt;li>Stability -&amp;gt; 看屬於哪個類型使用 [log, traces, traces]&lt;/li>
+&lt;li>Distributions -&amp;gt; 判斷是否已啟用&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>
 &lt;p>collector = receivers + processors + exporters&lt;/p>
 &lt;ul>
@@ -226,7 +251,39 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> receivers: [otlp, otelarrow]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> processors: [memory_limiter, transform/elastic-apm, batch]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exporters: [otlp/elastic-apm]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="metric-scope">metric scope
-&lt;/h2>&lt;ul>
-&lt;li>看 metric 是從哪邊來的&lt;/li>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="collector-agent-vs-collector-cluster-agent">collector-agent vs collector-cluster-agent
+&lt;/h4>&lt;h5 id="metric-相關">metric 相關
+&lt;/h5>&lt;ul>
+&lt;li>
+&lt;p>scope:判斷 metric 是從哪個套件來的&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>collector-agent&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>(37) 服務指標
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (13) k8s.pod.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (13) k8s.node.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (11) container.*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>collector-cluster-agent&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>(33) 服務指標
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (4) k8s.statefulset.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.resource_quota.used
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.resource_quota.hard_limit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (2) k8s.replicaset.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.pod.phase
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.node.condition_ready
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.namespace.phase
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (5) k8s.job.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (4) k8s.hpa.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (2) k8s.deployment.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (4) k8s.daemonset.*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - k8s.cronjob.active_jobs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - (6) k8s.container.*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h5 id="log-相關">log 相關
+&lt;/h5>&lt;ul>
+&lt;li>collector-agent: 服務訪問 log&lt;/li>
+&lt;li>collector-cluster-agent: event 相關 log (e.g. 服務被建立、job 執行)&lt;/li>
 &lt;/ul></description></item></channel></rss>
