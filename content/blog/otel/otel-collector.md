@@ -43,6 +43,8 @@ extraEnvs:
 
 [receiver - receivercreator](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator)
 
+[receivercreator - example](https://github.com/elastic/elastic-agent/blob/main/deploy/helm/edot-collector/kube-stack/values.yaml)
+
 [extension - k8s_observer](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver)
 
 [Important Components for Kubernetes](https://opentelemetry.io/docs/platforms/kubernetes/collector/components/)
