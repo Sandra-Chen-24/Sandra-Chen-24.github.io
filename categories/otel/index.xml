@@ -29,6 +29,8 @@
 >參考 chart&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator" target="_blank" rel="noopener"
 >receiver - receivercreator&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/elastic/elastic-agent/blob/main/deploy/helm/edot-collector/kube-stack/values.yaml" target="_blank" rel="noopener"
+>receivercreator - example&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver" target="_blank" rel="noopener"
 >extension - k8s_observer&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://opentelemetry.io/docs/platforms/kubernetes/collector/components/" target="_blank" rel="noopener"

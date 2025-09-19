@@ -1,4 +1,40 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Basic on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/basic/</link><description>Recent content in Basic on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Tue, 16 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>還沒想到分類</title><link>https://sandra-chen-24.github.io/blog/common/map/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/common/map/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># $http_referer 去匹配正則規則 &amp;#34;~^https://(?&amp;lt;domain&amp;gt;[^/]+)&amp;#34;，取出 https:// 後面第一段不含 / 的字串存進 $domain
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Basic on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/basic/</link><description>Recent content in Basic on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 17 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns">NodeLocalDNS
+&lt;/h2>&lt;ul>
+&lt;li>dnsmasq_hits_count 跟 dnsmasq_misses_count 主要用來反映快取效益，命中就不需要往上游 CoreDNS/KubeDNS 或外部 DNS 查&lt;/li>
+&lt;li>dnsmasq_hits_count / (dnsmasq_hits_count + dnsmasq_misses_count) * 100
+-&amp;gt; 如果命中率 &amp;gt; 80%，代表大部分的查詢都被快取解決&lt;/li>
+&lt;/ul>
+&lt;h2 id="kube-dns-autoscaler-的設定">kube-dns-autoscaler 的設定
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ConfigMap&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">kube-dns-autoscaler&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">namespace&lt;/span>: &lt;span style="color:#ae81ff">kube-system&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">data&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">linear&lt;/span>: |-&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;coresPerReplica&amp;#34;: 256,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;nodesPerReplica&amp;#34;: 16,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;min&amp;#34;: 2,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;max&amp;#34;: 20
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> }&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 coresPerReplica&lt;/span>: &lt;span style="color:#ae81ff">每多少個 CPU Core 需要新增一個 CoreDNS 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 nodesPerReplica&lt;/span>: &lt;span style="color:#ae81ff">每多少個 Node 需要新增一個副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">👉 autoscaler 會取兩者中 需要副本數較多的那個值&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 min&lt;/span>: &lt;span style="color:#ae81ff">kube-dns/CoreDNS 最少副本數 (避免過小集群無法容錯)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 max&lt;/span>: &lt;span style="color:#ae81ff">kube-dns/CoreDNS 最大副本數 (避免太多 pod 浪費資源)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">📌 實際例子&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">假設你的 cluster 有：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">640&lt;/span> &lt;span style="color:#ae81ff">cores / 80 nodes&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">計算：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">coresPerReplica = 256 → 640 / 256 = 3 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">nodesPerReplica = 16 → 80 / 16 = 5 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">👉 autoscaler 選取 5 副本 (因為要滿足兩個條件中較大的需求)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>還沒想到分類</title><link>https://sandra-chen-24.github.io/blog/common/map/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/common/map/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># $http_referer 去匹配正則規則 &amp;#34;~^https://(?&amp;lt;domain&amp;gt;[^/]+)&amp;#34;，取出 https:// 後面第一段不含 / 的字串存進 $domain
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>map $http_referer $effective_host {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> default $host;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;#34;~^https://(?&amp;lt;domain&amp;gt;[^/]+)&amp;#34; $domain;

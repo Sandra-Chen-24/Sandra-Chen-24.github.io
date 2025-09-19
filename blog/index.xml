@@ -1,4 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/blog/</link><description>Recent content in Blogs on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Tue, 16 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gcp/service-agents/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/service-agents/</guid><description>&lt;p>&lt;a class="link" href="https://cloud.google.com/iam/docs/service-agents" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/blog/</link><description>Recent content in Blogs on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 18 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gcp/gateway/</link><pubDate>Thu, 18 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/gateway/</guid><description>&lt;p>&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway?hl=zh-tw" target="_blank" rel="noopener"
+>secure-gateway&lt;/a>
+&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-security#gateway-management" target="_blank" rel="noopener"
+>gateway-management&lt;/a>&lt;/p></description></item><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns">NodeLocalDNS
+&lt;/h2>&lt;ul>
+&lt;li>dnsmasq_hits_count 跟 dnsmasq_misses_count 主要用來反映快取效益，命中就不需要往上游 CoreDNS/KubeDNS 或外部 DNS 查&lt;/li>
+&lt;li>dnsmasq_hits_count / (dnsmasq_hits_count + dnsmasq_misses_count) * 100
+-&amp;gt; 如果命中率 &amp;gt; 80%，代表大部分的查詢都被快取解決&lt;/li>
+&lt;/ul>
+&lt;h2 id="kube-dns-autoscaler-的設定">kube-dns-autoscaler 的設定
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ConfigMap&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">kube-dns-autoscaler&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">namespace&lt;/span>: &lt;span style="color:#ae81ff">kube-system&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">data&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">linear&lt;/span>: |-&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;coresPerReplica&amp;#34;: 256,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;nodesPerReplica&amp;#34;: 16,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;min&amp;#34;: 2,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;max&amp;#34;: 20
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> }&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 coresPerReplica&lt;/span>: &lt;span style="color:#ae81ff">每多少個 CPU Core 需要新增一個 CoreDNS 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 nodesPerReplica&lt;/span>: &lt;span style="color:#ae81ff">每多少個 Node 需要新增一個副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">👉 autoscaler 會取兩者中 需要副本數較多的那個值&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 min&lt;/span>: &lt;span style="color:#ae81ff">kube-dns/CoreDNS 最少副本數 (避免過小集群無法容錯)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">🔹 max&lt;/span>: &lt;span style="color:#ae81ff">kube-dns/CoreDNS 最大副本數 (避免太多 pod 浪費資源)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">📌 實際例子&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">假設你的 cluster 有：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">640&lt;/span> &lt;span style="color:#ae81ff">cores / 80 nodes&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">計算：&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">coresPerReplica = 256 → 640 / 256 = 3 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">nodesPerReplica = 16 → 80 / 16 = 5 副本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">👉 autoscaler 選取 5 副本 (因為要滿足兩個條件中較大的需求)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gcp/service-agents/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/service-agents/</guid><description>&lt;p>&lt;a class="link" href="https://cloud.google.com/iam/docs/service-agents" target="_blank" rel="noopener"
 >service-agents&lt;/a>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># 由 Google 自動建立的 Google-managed service accounts，不會出現在「IAM → Service Accounts」清單中
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>例如：
@@ -47,6 +86,8 @@
 >參考 chart&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator" target="_blank" rel="noopener"
 >receiver - receivercreator&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/elastic/elastic-agent/blob/main/deploy/helm/edot-collector/kube-stack/values.yaml" target="_blank" rel="noopener"
+>receivercreator - example&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver" target="_blank" rel="noopener"
 >extension - k8s_observer&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://opentelemetry.io/docs/platforms/kubernetes/collector/components/" target="_blank" rel="noopener"
