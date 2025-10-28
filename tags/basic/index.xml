@@ -1,4 +1,65 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Basic on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/basic/</link><description>Recent content in Basic on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 17 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns">NodeLocalDNS
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Basic on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/basic/</link><description>Recent content in Basic on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 19 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>curl 的歷程</title><link>https://sandra-chen-24.github.io/blog/common/curl/</link><pubDate>Fri, 19 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/common/curl/</guid><description>&lt;h2 id="使用-http-跟-https-差別">使用 HTTP 跟 HTTPS 差別
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">geo.conf&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">  geo $allowed_ip_geo {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    default 0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    34.1.1.1 @aaa;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    130.1.1.1 @bbb;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">  }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">  map $allowed_ip_geo$host $valid_request {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    default 0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    &amp;#34;@bbbhall.bbb999.com&amp;#34; 1;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">    &amp;#34;@aaahall.aaa888.com&amp;#34; 1;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">  }&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># hall.aaa888.com 有解析，hall.bbb999.com 沒有解析
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>⭐ ## 有解析的 host 使用 https 跟 http 差別
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[hall.aaa888.com 應該使用 34.1.1.1 入口，想模擬使用 130.1.1.1 被阻擋]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### http
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl http://130.1.1.1 -H &amp;#39;host: hall.aaa888.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; Location: https://hall.aaa888.com:443/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Issue another request to this URL: &amp;#39;https://hall.aaa888.com:443/&amp;#39;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 200 OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #1 to host hall.aaa888.com left intact
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### https
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl https://130.1.1.1 -H &amp;#39;host: hall.aaa888.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #0 to host 130.1.1.1 left intact
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>📌 -&amp;gt; http 會遇到 301 然後用 host 的網址是解析轉導，因為有設定 80 強轉 443
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>⭐ ## 沒解析的 host 使用 https 跟 http 差別
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>🔍🔍🔍 設定正確 IP，跟有解析情境同
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[本地設定：130.1.1.1 hall.bbb999.com]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### http
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl http://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; Location: https://hall.bbb999.com:443/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Issue another request to this URL: &amp;#39;https://hall.bbb999.com:443/&amp;#39;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 200 OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #1 to host hall.bbb999.com left intact
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### https
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl https://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #0 to host 34.1.1.1 left intact
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>🔍🔍🔍 設定錯誤確 IP
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[本地設定：34.1.1.1 hall.bbb999.com]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### http
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl http://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; Location: https://hall.bbb999.com:443/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Issue another request to this URL: &amp;#39;https://hall.bbb999.com:443/&amp;#39;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 ### https
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl https://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #0 to host 34.1.1.1 left intact
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-&amp;gt; 等同於 curl https://hall.bbb999.com -k
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns">NodeLocalDNS
 &lt;/h2>&lt;ul>
 &lt;li>dnsmasq_hits_count 跟 dnsmasq_misses_count 主要用來反映快取效益，命中就不需要往上游 CoreDNS/KubeDNS 或外部 DNS 查&lt;/li>
 &lt;li>dnsmasq_hits_count / (dnsmasq_hits_count + dnsmasq_misses_count) * 100
