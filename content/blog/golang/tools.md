@@ -10,19 +10,20 @@ categories = ["golang"]
 ```text
 github.com/gin-gonic/gin # http router
 github.com/ThreeDotsLabs/watermill # event system (CQRS)
+>> 替換 redis queue
 github.com/spf13/afero # filesystem abstracts
 
 gorm.io/gorm # database abstracts
 github.com/redis/go-redis/v9 # redis sdk
 
 github.com/spf13/cobra # cli framework
-
 github.com/spf13/viper # config framework
-
 go.opentelemetry.io/otel # observability
 
 [小工具]
-github.com/spf13/pflag # cli flag helper [cli 快捷]
+github.com/spf13/pflag # cli flag helper
+>> cli 快捷(golang 原生的套件叫做flag)
 github.com/samber/lo # helper
+>> 有別人寫好的小工具
 github.com/spf13/cast # helper
 ```
