@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/</link><description>Recent content on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 24 Sep 2025 10:54:57 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>套件們</title><link>https://sandra-chen-24.github.io/blog/golang/tools/</link><pubDate>Wed, 24 Sep 2025 10:54:57 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/golang/tools/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>github.com/gin-gonic/gin # http router
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/</link><description>Recent content on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 31 Oct 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>gateway api vs api gateway</title><link>https://sandra-chen-24.github.io/blog/gateway/basic/</link><pubDate>Fri, 31 Oct 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gateway/basic/</guid><description>&lt;h2 id="api-gateway">API Gateway
+&lt;/h2>&lt;ul>
+&lt;li>作為所有 API 請求的入口（entry point）&lt;/li>
+&lt;li>提供：
+&lt;ul>
+&lt;li>Routing（依路徑導向不同服務）&lt;/li>
+&lt;li>Authentication / Authorization&lt;/li>
+&lt;li>Rate limiting&lt;/li>
+&lt;li>Caching&lt;/li>
+&lt;li>Logging / Metrics&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>常見實作：
+&lt;ul>
+&lt;li>AWS API Gateway&lt;/li>
+&lt;li>Kong&lt;/li>
+&lt;li>NGINX Gateway&lt;/li>
+&lt;li>Istio Gateway（在 Service Mesh 架構中）&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="gateway-api">Gateway API
+&lt;/h2>&lt;p>&lt;a class="link" href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener"
+>官方文件&lt;/a>
+&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/standalone-neg?hl=zh-tw#uses_with" target="_blank" rel="noopener"
+>neg&lt;/a>
+&lt;a class="link" href="https://hackmd.io/@QI-AN/Understanding-and-Implementing-the-Kubernetes-Gateway-API" target="_blank" rel="noopener"
+>t&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Kubernetes 官方的新一代網路 API 標準，用來取代早期的 Ingress，是一組 Kubernetes CRD（Custom Resource Definition）&lt;/li>
+&lt;li>主要資源：[GatewayClass -&amp;gt; Gateway -&amp;gt; HTTPRoute -&amp;gt; Service 或 GatewayClass -&amp;gt; Gateway -&amp;gt; TLSRoute -&amp;gt; Service]
+&lt;ul>
+&lt;li>GatewayClass&lt;/li>
+&lt;li>Gateway -&amp;gt; 入口 IP&lt;/li>
+&lt;li>HTTPRoute&lt;/li>
+&lt;li>TCPRoute ?&lt;/li>
+&lt;li>UDPRoute ?&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>讓不同廠商（例如 Istio、NGINX、Traefik、HAProxy、Linkerd）可以共用同一套 Gateway 規範，達成：
+&lt;ul>
+&lt;li>統一配置方式&lt;/li>
+&lt;li>支援更細緻的路由規則&lt;/li>
+&lt;li>支援多租戶、多 namespace 管理&lt;/li>
+&lt;li>清楚分層：Infra team 管 Gateway，App team 管 Route&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Terraform issue</title><link>https://sandra-chen-24.github.io/blog/terraform/issue/</link><pubDate>Thu, 30 Oct 2025 10:54:57 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/terraform/issue/</guid><description>&lt;h2 id="google-terraform-provider-bug">google terraform provider bug
+&lt;/h2>&lt;ul>
+&lt;li>使用 terraform 設定 kubelet_config 區塊，預設會把 cpuCfsQuota 設定為 false，跟 GCP API 相反，GCP API 預設設定為 true
+-&amp;gt; This issue is fixed in the &amp;ldquo;7.6.0&amp;rdquo; terraform google provider version
+&lt;a class="link" href="https://github.com/hashicorp/terraform-provider-google/releases/tag/v7.6.0" target="_blank" rel="noopener"
+>v7.6.0&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>套件們</title><link>https://sandra-chen-24.github.io/blog/golang/tools/</link><pubDate>Wed, 24 Sep 2025 10:54:57 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/golang/tools/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>github.com/gin-gonic/gin # http router
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>github.com/ThreeDotsLabs/watermill # event system (CQRS)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt;&amp;gt; 替換 redis queue
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>github.com/spf13/afero # filesystem abstracts
@@ -77,7 +130,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt; HTTP/1.1 403 Forbidden
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* Connection #0 to host 34.1.1.1 left intact
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-&amp;gt; 等同於 curl https://hall.bbb999.com -k
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gcp/gateway/</link><pubDate>Thu, 18 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/gateway/</guid><description>&lt;p>&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway?hl=zh-tw" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gateway/gateway/</link><pubDate>Thu, 18 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gateway/gateway/</guid><description>&lt;p>&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway?hl=zh-tw" target="_blank" rel="noopener"
 >secure-gateway&lt;/a>
 &lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-security#gateway-management" target="_blank" rel="noopener"
 >gateway-management&lt;/a>&lt;/p></description></item><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns">NodeLocalDNS
