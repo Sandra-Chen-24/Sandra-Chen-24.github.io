@@ -40,3 +40,11 @@ categories = ["gateway"]
   - 支援更細緻的路由規則
   - 支援多租戶、多 namespace 管理
   - 清楚分層：Infra team 管 Gateway，App team 管 Route
+
+## 測試未正式生效的域名
+
+```text
+curl --resolve <hostname>:<port>:<ip> <url>
+❯ curl --resolve hall.vir888.com:443:35.201.227.203 https://hall.vir888.com
+curl --resolve hall.epbyofzj.com:443:34.160.139.10 https://hall.epbyofzj.com/kevintest -H 'referer: https://hall.dctest999.com'
+```
