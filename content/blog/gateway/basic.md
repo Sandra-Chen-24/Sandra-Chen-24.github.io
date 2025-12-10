@@ -48,3 +48,5 @@ curl --resolve <hostname>:<port>:<ip> <url>
 ❯ curl --resolve hall.vir888.com:443:35.201.227.203 https://hall.vir888.com
 curl --resolve hall.epbyofzj.com:443:34.160.139.10 https://hall.epbyofzj.com/kevintest -H 'referer: https://hall.dctest999.com'
 ```
+
+不能在 Gateway 處理是因為 HTTPRoute rules 的 matches 只能有 16 個
