@@ -17,9 +17,14 @@ categories = ["cert-manager"]
 - [Chart_cert-manager](https://charts.jetstack.io)
   - 是 Kubernetes 的自動憑證管理工具，最終與 Ingress 等資源整合，實現應用程式的 TLS 加密與自動續期，簡化 HTTPS 部署
   - 建立 Resource [roles, rolebindings, clusterroles, clusterrolebindings, serviceaccounts, deployment, service]
-    - cert-manager
+    - cert-manager：扮演著整個系統的大腦和協調者
+      - 根據 Certificate 資源的定義，啟動與 ACME 伺服器 (如 Let's Encrypt) 溝通的流程
+      - 負責創建 Challenge 資源（例如 DNS-01 挑戰），並等待 ExternalDNS 或 HTTP-01 服務完成驗證
+      - 追蹤憑證的到期日，並在憑證到期前自動啟動續期流程
     - cert-manager-cainjector
-    - cert-manager-webhook
+      - 當 cert-manager 創建或更新自身的 CA 憑證時，cainjector 會自動將這些 CA 憑證注入到上述目標資源中，確保它們能夠正確地信任和與 cert-manager 的 Webhook (或其他服務) 進行 TLS 通訊
+    - cert-manager-webhook：扮演著守門員的角色，確保只有有效的、格式正確的 cert-manager 資源才能進入 Cluster
+      - 在使用者創建或修改 Certificate、Issuer 等資源時，在資源被寫入 etcd 之前，對其進行嚴格的驗證
   - 建立 CRDs
     - CertificateRequest
     - Certificate
@@ -51,3 +56,9 @@ categories = ["cert-manager"]
   - [Chart_Kubernetes-Reflector](https://github.com/emberstack/helm-charts)
     - [](https://github.com/emberstack/kubernetes-reflector)
     - 是一個專門設計用於自動化 Secret 和 ConfigMap 同步的控制器，允許在集中的 Namespace 中定義 Secret 或 ConfigMap，然後 Reflector 會將自動複製（或稱「反射」）到您指定的其他目標 (Target) Namespaces 中
+
+    ```text
+    # 有這個 annotations 就會同步到其他 ns
+    annotations:
+        reflector.v1.k8s.emberstack.com/auto-reflects: "True"
+    ```
