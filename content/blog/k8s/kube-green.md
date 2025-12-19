@@ -56,13 +56,14 @@ templates:
 
 ### [CRD SleepInfo 設定](https://kube-green.dev/docs/configuration/)
 
-📌 kube-green 內建開關，會記得服務的原始的狀態，如果原本服務是手動關閉，喚醒時不會誤打開
+📌 kube-green 內建開關，會記得服務的原始的狀態，如果原本服務是手動關閉，喚醒時不會誤打開 [sleepAt 關 pod，wakeUpAt 開 pod]
 
 - suspendCronJobs
 - suspendDeployments
 - suspendStatefulSets
 
-📌  使用 patch 手動改寫：這是「永久性」或「靜態」的修改，一旦這個 Patch 生效，你的服務就會永遠處於暫停狀態，除非你手動移除這個 Patch
+📌  使用 patch 改寫： [布版當下關 pod，wakeUpAt 開 pod]
+📌  kind: SleepInfo 資源的 namespace 要跟要關閉的服務相同
 
 ```yaml
 apiVersion: kube-green.com/v1alpha1
@@ -108,6 +109,80 @@ spec:
         - path: /spec/suspend
           op: replace
           value: true
+```
+
+### 測試
+
+```yaml
+# 布版當下關 pod，wakeUpAt 開 pod
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: example
+spec:
+  weekdays: "*"
+  sleepAt: "17:42"
+  wakeUpAt: "17:45"
+  timeZone: "Asia/Taipei"
+  suspendCronJobs: false
+  suspendDeployments: false
+  suspendStatefulSets: false
+  includeRef:
+    - apiVersion: "apps/v1"
+      kind: Deployment
+      name: api-hex
+  patches:
+    - target:
+        group: apps
+        kind: Deployment
+      patch: |-
+        - path: /spec/replicas
+          op: add
+          value: 0
+
+# sleepAt 關 pod，wakeUpAt 開 pod
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: example
+spec:
+  weekdays: "*"
+  sleepAt: "17:42"
+  wakeUpAt: "17:45"
+  timeZone: "Asia/Taipei"
+  suspendCronJobs: false
+  suspendDeployments: true
+  suspendStatefulSets: false
+  includeRef:
+    - apiVersion: "apps/v1"
+      kind: Deployment
+      name: api-hex
+  patches:
+    - target:
+        group: apps
+        kind: Deployment
+      patch: |-
+        - path: /spec/replicas
+          op: add
+          value: 0
+
+# sleepAt 關 pod，wakeUpAt 開 pod
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: example
+spec:
+  weekdays: "*"
+  sleepAt: "17:42"
+  wakeUpAt: "17:45"
+  timeZone: "Asia/Taipei"
+  suspendCronJobs: false
+  suspendDeployments: true
+  suspendStatefulSets: false
+  includeRef:
+    - apiVersion: "apps/v1"
+      kind: Deployment
+      name: api-hex
 ```
 
 ## [descheduler](https://github.com/kubernetes-sigs/descheduler)
