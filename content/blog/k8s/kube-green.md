@@ -61,9 +61,20 @@ templates:
 - suspendCronJobs
 - suspendDeployments
 - suspendStatefulSets
+-> ⭐ 預設關閉這兩個資源類型的服務 deployment and statefulset
+
+```text
+✨ To sleep the Deployment and StatefulSet resources, replicas are set to 0.
+✨ To wake up, the number of replicas is set to the number of replicas before the sleep
+
+✨ To sleep the CronJob resources, they are set as suspended.
+✨ To wake up, the suspend field is restored
+```
 
 📌  使用 patch 改寫： [布版當下關 pod，wakeUpAt 開 pod]
 📌  kind: SleepInfo 資源的 namespace 要跟要關閉的服務相同
+
+[docs](https://kube-green.dev/docs/apireference_v1alpha1/)
 
 ```yaml
 apiVersion: kube-green.com/v1alpha1
@@ -79,7 +90,7 @@ spec:
   suspendDeployments: false ⭐ 是否關閉 Deployments
   suspendStatefulSets: false ⭐ 是否關閉 StatefulSets
   excludeRef:
-    # Exclude resources
+    # Exclude resources [設定多組測試正常]
     - apiVersion: "batch/v1"
       kind:       CronJob
       name:       do-not-suspend
@@ -88,11 +99,15 @@ spec:
       name:       api-gateway
     # Exclude with labels
     - matchLabels:
-        kube-green.dev/exclude: true
+        kube-green.dev/exclude: "true"
   includeRef:
+    # Include resources [⚠️ 設定一個以上條件不會作動]
+    - apiVersion: "apps/v1"
+      kind:       Deployment
+      name:       api-gateway
     # Include with labels
     - matchLabels:
-        kube-green.dev/include: true
+        kube-green.dev/include: "true"
     # Custom patches
   patches:
     - target:
@@ -183,6 +198,139 @@ spec:
     - apiVersion: "apps/v1"
       kind: Deployment
       name: api-hex
+
+# sleepAt 調升 pod 數量，wakeUpAt 調回原本 pod 數量
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: example
+spec:
+  weekdays: "*"
+  sleepAt: "14:15"
+  wakeUpAt: "14:18"
+  timeZone: "Asia/Taipei"
+  suspendCronJobs: false
+  suspendDeployments: true
+  suspendStatefulSets: false
+  patches:
+    - target:
+        group: apps
+        kind: Deployment
+      patch: |-
+        - path: /spec/replicas
+          op: add
+          value: 3
+```
+
+### Manual management of certificates
+
+[Generate Self-Signed Certificates step by step](https://kube-green.dev/docs/advanced/webhook-cert-management/#without-cert-manager)
+
+- openssl.conf
+
+```text
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[ dn ]
+CN = kube-green-webhook-service.kube-green.svc.cluster.local
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = kube-green-webhook-service
+DNS.2 = kube-green-webhook-service.kube-green
+DNS.3 = kube-green-webhook-service.kube-green.svc
+DNS.4 = kube-green-webhook-service.kube-green.svc.cluster.local
+```
+
+- And then run the following commands:
+
+```text
+# Generate CA private key
+openssl genpkey -algorithm RSA -out ca.key
+
+# Generate CA certificate for 100 years
+openssl req -new -nodes -x509 -key ca.key -out ca.crt -days 36500 -subj "/CN=The CA"
+
+# Generate private key
+openssl genpkey -algorithm RSA -out tls.key
+
+# Generate certificate signing request
+openssl req -new -key tls.key -out tls.csr -config openssl.conf
+
+# Generate certificate signed with the CA
+openssl x509 -req -in tls.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out tls.crt -days 365 -extfile openssl.conf -extensions req_ext
+```
+
+- After creating the certificates, you can create the secret with the following command:
+
+```text
+kubectl create secret tls webhook-server-cert --cert=./tls.crt --key=./tls.key
+```
+
+Once generated, you can create the kube-green manifests (commenting out the [CERT-MANAGER] part), create the base64 of the ca.crt file and patch the webhook configuration with the new caBundle.
+
+```text
+cat ca.crt | base64
+```
+
+```yaml
+webhooks:
+  - name: vsleepinfo.kb.io
+    clientConfig:
+      caBundle: <CA_BUNDLE>
+```
+
+[helmfile-advanced-features](https://helmfile.readthedocs.io/en/latest/advanced-features/)
+-> 調整 chart
+
+```yaml
+releases:
+  - <<: *kube-green
+    name: kube-green
+    strategicMergePatches:
+      - apiVersion: admissionregistration.k8s.io/v1
+        kind: ValidatingWebhookConfiguration
+        metadata:
+          name: kube-green-validating-webhook-configuration
+        webhooks:
+          - name: vsleepinfo.kb.io
+            clientConfig:
+              caBundle: <CA_BUNDLE>
+```
+
+```yaml
+# 跟 strategicMergePatches 相等寫法
+## jsonPatches
+    jsonPatches:
+      - target:
+          group: admissionregistration.k8s.io
+          version: v1
+          kind: ValidatingWebhookConfiguration
+          name: kube-green-validating-webhook-configuration
+        patch:
+          - op: replace
+            path: /webhooks/0/clientConfig/caBundle
+            value: <CA_BUNDLE>
+## transformers
+    transformers:
+      - apiVersion: builtin
+        kind: PatchTransformer
+        metadata:
+          name: patch-ca-bundle
+        patch: |-
+          - op: replace
+            path: /webhooks/0/clientConfig/caBundle
+            value: <CA_BUNDLE>
+        target:
+          kind: ValidatingWebhookConfiguration
+          name: kube-green-validating-webhook-configuration
 ```
 
 ## [descheduler](https://github.com/kubernetes-sigs/descheduler)

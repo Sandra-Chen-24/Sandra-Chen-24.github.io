@@ -157,7 +157,10 @@ spec:
 
 - 微調觸發節點移除和工作負載整併的資源使用率不足門檻
 - 可以微調下列參數：
-  - consolidationDelayMinutes：GKE 移除使用率不足的節點前，等待的分鐘數
+  - consolidationStrategy：
+    - OptimizePrice：GKE 會不斷掃描叢集。如果發現把 Pod 移到更便宜的機器（例如從 On-demand 移到 Spot）或縮減節點數量可以省錢，它就會主動執行
+    - Disabled：節點一旦長出來，除非上面完全沒 Pod 了，否則不會主動縮編
+  - consolidationDelayMinutes：GKE 移除使用率不足的節點前，等待的分鐘數 [預設值：通常為 15 分鐘]
   - consolidationThreshold：CPU 和記憶體的使用率門檻，以節點可用資源的百分比表示。只有在資源使用率低於這個門檻時，GKE 才會考慮移除節點
 
 ### whenUnsatisfiable
