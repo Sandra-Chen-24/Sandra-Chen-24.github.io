@@ -7,19 +7,16 @@ tags = ["gke","cost"]
 categories = ["gcp"]
 +++
 
-[Practical Guide to Kueue and Custom Compute Classes](https://medium.com/google-cloud/practical-guide-to-kueue-and-custom-compute-classes-85a3fe287487)
-[Compute Flexible CRDs](https://docs.cloud.google.com/compute/docs/instances/committed-use-discounts-overview?hl=zh-tw#spend_based)
-[GKE Custom Compute Class Examples](https://github.com/vszal/gke-custom-compute-class-examples)
-
 ## [Custom Compute Class](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#how-custom)
 
 - 🚫 限制 ComputeClass 的名稱開頭不得為 gke 或 autopilot
-- 使用預約資源 [reservations](https://docs.cloud.google.com/compute/docs/instances/reservations-overview?hl=zh-tw)
-- 定義自動調度資源的門檻和參數，以便移除未充分利用的節點 [autoscalingPolicy]
 - 自動替換為更適合的節點設定 [activeMigration]
-- Enable NAP (Node auto-provisioning) per class
+- Enable NAP (Node auto-provisioning) per class，依照 cluster 版本設定方式不同
   - GKE 1.33.3-gke.1136000 以上版本 [nodePoolAutoCreation]
   - GKE 1.33.3-gke.1136000 以下版本:啟用叢集層級的節點自動佈建功能 [Node auto-provisioning]
+    - cluster 版本大於要求，但 nodepool 小於要求，自動長出來的 nodepool 會跟 cluster 同版本
+- 定義自動調度資源的門檻和參數，以便移除未充分利用的節點 [autoscalingPolicy]
+- 使用預約資源 [reservations]
 - 內建的 ComputeClass：在 Standard 叢集中執行 Autopilot 模式工作負載 [適用於 1.34.1-gke.1829001 以上版本](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-built-in-compute-classes?hl=zh-tw)
   - autopilot
   - autopilot-spot
@@ -44,7 +41,33 @@ spec:
         cloud.google.com/compute-class: COMPUTE_CLASS
 ```
 
+### activeMigration
+
 - 自動產生的 node 前綴會是 nap- (for Node Auto-Provisioning)
+- 選用自動調度資源功能，可自動以新節點取代現有節點。節點會根據特定條件替換，具體取決於遷移類型，GKE 會建立新節點，然後排空並刪除舊節點
+  - 🚫 遷移作業不會遷移儲存在永久儲存空間中的資料，例如 Compute Engine 永久磁碟。為盡量降低資料遺失風險，請勿在有狀態工作負載使用的 ComputeClass 中啟用主動遷移功能
+  - 🚫 如果節點無法移除，進行中的遷移作業不會取代這些節點。舉例來說，如果主動遷移會違反 --min-nodes 節點集區設定，就不會取代節點
+  - 🚫 為避免重要工作負載中斷，遷移作業不會移動下列 Pod：
+    - 設定 PodDisruptionBudget 的 Pod，如果移動作業會超出 PodDisruptionBudget
+    - 具有 cluster-autoscaler.kubernetes.io/safe-to-evict: "false" 註解的 Pod
+  - 支援的有效遷移類型如下：
+    - optimizeRulePriority：以優先順序清單中較高的節點，取代 ComputeClass 優先順序清單中較低的節點
+    - ensureAllDaemonSetPodsRunning：以較大的節點取代具有無法排程的 DaemonSet Pod 的節點，這些節點能夠執行所有必要的 DaemonSet Pod
+
+### autoscalingPolicy
+
+- 微調觸發節點移除和工作負載整併的資源使用率不足門檻
+- 可以微調下列參數：
+  - consolidationStrategy：
+    - OptimizePrice：GKE 會不斷掃描叢集。如果發現把 Pod 移到更便宜的機器（例如從 On-demand 移到 Spot）或縮減節點數量可以省錢，它就會主動執行
+    - Disabled：節點一旦長出來，除非上面完全沒 Pod 了，否則不會主動縮編
+  - consolidationDelayMinutes：GKE 移除使用率不足的節點前，等待的分鐘數 [預設值：通常為 15 分鐘]
+  - consolidationThreshold：CPU 和記憶體的使用率門檻，以節點可用資源的百分比表示。只有在資源使用率低於這個門檻時，GKE 才會考慮移除節點
+
+### whenUnsatisfiable
+
+- ScaleUpAnyway: ComputeClass 優先順序中沒有的機器系列，會觸發節點建立作業，GKE 1.33 之前的預設值
+- DoNotScaleUp: ComputeClass 優先順序中沒有的機器系列，不會觸發節點建立作業，GKE 1.33 以上版本的預設值
 
 ```yaml
 apiVersion: cloud.google.com/v1
@@ -69,55 +92,45 @@ spec:
     consolidationDelayMinutes: 5
 ```
 
-### [priorities](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#priority-rules)
+## [priorities](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#priority-rules)
 
 - machineFamily
 
 ```yaml
 priorities:
-- machineFamily: n4
-  spot: true
-  minCores: 16
-  minMemoryGb: 64
-  storage:
-    bootDiskKMSKey: projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1
-    secondaryBootDisks:
-    - diskImageName: pytorch-mnist
-      project: k8s-staging-jobset
+  - machineFamily: n4
+    spot: true
+    minCores: 16
+    minMemoryGb: 64
+    storage:
+      bootDiskKMSKey: projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1
+      secondaryBootDisks:
+      - diskImageName: pytorch-mnist
+        project: k8s-staging-jobset
 ```
 
 - machineType
 
 ```yaml
 priorities:
-- machineType: n4-standard-32
-  spot: true
-  storage:
-    bootDiskType: pd-balanced
-    bootDiskSize: 250
-    localSSDCount: 2
-    bootDiskKMSKey: projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1
+  - machineType: n4-standard-32
+    spot: true
+    storage:
+      bootDiskType: pd-balanced
+      bootDiskSize: 250
+      localSSDCount: 2
+      bootDiskKMSKey: projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1
 ```
 
 - [nodepools](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#manual-node-pools)
   - 🚫 這個欄位僅支援 GKE Standard 模式
+  - 手動建立的 nood pool 要加上 Kubernetes 標籤 & taint
+    cloud.google.com/compute-class: {ComputeClass}
 
-- [priorityDefaults](https://docs.cloud.google.com/kubernetes-engine/docs/reference/crds/computeclass#priorityDefaults)
+- [priorityDefaults](https://docs.cloud.google.com/kubernetes-engine/docs/reference/crds/computeclass#priorityDefaults) [TODO]
   - GKE 1.32.1-gke.1729000 以上版本
 
-### activeMigration
-
-- 選用自動調度資源功能，可自動以新節點取代現有節點。節點會根據特定條件替換，具體取決於遷移類型，GKE 會建立新節點，然後排空並刪除舊節點
-  - 🚫 遷移作業不會遷移儲存在永久儲存空間中的資料，例如 Compute Engine 永久磁碟。為盡量降低資料遺失風險，請勿在有狀態工作負載使用的 ComputeClass 中啟用主動遷移功能
-  - 🚫 如果節點無法移除，進行中的遷移作業不會取代這些節點。舉例來說，如果主動遷移會違反 --min-nodes 節點集區設定，就不會取代節點
-  - 🚫 為避免重要工作負載中斷，遷移作業不會移動下列 Pod：
-    - 設定 PodDisruptionBudget 的 Pod，如果移動作業會超出 PodDisruptionBudget。
-    - 具有 cluster-autoscaler.kubernetes.io/safe-to-evict: "false" 註解的 Pod
-  - 支援的有效遷移類型如下：
-    - optimizeRulePriority：以優先順序清單中較高的節點，取代 ComputeClass 優先順序清單中較低的節點
-    - ensureAllDaemonSetPodsRunning：以較大的節點取代具有無法排程的 DaemonSet Pod 的節點，這些節點能夠執行所有必要的 DaemonSet Pod
-
-### [reservations](https://docs.cloud.google.com/compute/docs/instances/reservations-overview?hl=zh-tw)
+### [reservations](https://docs.cloud.google.com/compute/docs/instances/reservations-overview?hl=zh-tw) [TODO]
 
 - Cloud 區域的硬體可用性，則可以在自訂 ComputeClass 中設定每個備援優先順序，讓 GKE 在建立新節點時使用預留資源，⭐ 適用於 GKE 1.31.1-gke.2105000 以上版本
   - 必須使用節點集區自動建立功能，GKE 才能使用預留資源建立新節點
@@ -138,7 +151,7 @@ spec:
       specific:
       - name: n4-shared-reservation
         project: reservation-project
-      affinity: Specific ⭐ 必須必須為 Specific
+      affinity: Specific ⭐ 必須為 Specific
   - machineType: a3-highgpu-1g
     storage:
       localSSDCount: 2
@@ -153,22 +166,7 @@ spec:
   whenUnsatisfiable: DoNotScaleUp
 ```
 
-### autoscalingPolicy
-
-- 微調觸發節點移除和工作負載整併的資源使用率不足門檻
-- 可以微調下列參數：
-  - consolidationStrategy：
-    - OptimizePrice：GKE 會不斷掃描叢集。如果發現把 Pod 移到更便宜的機器（例如從 On-demand 移到 Spot）或縮減節點數量可以省錢，它就會主動執行
-    - Disabled：節點一旦長出來，除非上面完全沒 Pod 了，否則不會主動縮編
-  - consolidationDelayMinutes：GKE 移除使用率不足的節點前，等待的分鐘數 [預設值：通常為 15 分鐘]
-  - consolidationThreshold：CPU 和記憶體的使用率門檻，以節點可用資源的百分比表示。只有在資源使用率低於這個門檻時，GKE 才會考慮移除節點
-
-### whenUnsatisfiable
-
-- ScaleUpAnyway: ComputeClass 優先順序中沒有的機器系列，會觸發節點建立作業，GKE 1.33 之前的預設值
-- DoNotScaleUp: ComputeClass 優先順序中沒有的機器系列，不會觸發節點建立作業，GKE 1.33 以上版本的預設值
-
-### nodePoolGroup
+### nodePoolGroup [TODO]
 
 - 將多個節點集區分組為單一邏輯單元，稱為「集合」。這個分組功能可讓您將共用設定套用至多個節點集區
 
@@ -178,9 +176,9 @@ spec:
     name: my-tpu-collection
 ```
 
-### [nodePoolConfig](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#node_pool_configuration)
+### [nodePoolConfig](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#node_pool_configuration) [TODO]
 
-## [預設 ComputeClass](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/run-pods-default-compute-classes?hl=zh-tw)
+### [預設 ComputeClass](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/run-pods-default-compute-classes?hl=zh-tw)
 
 - 可以將 GKE 叢集或特定命名空間設定為具有預設 ComputeClass
   - 將 ComputeClass 設為叢集層級的預設值，叢集必須執行 GKE 1.33.1-gke.1744000 以上版本
@@ -211,6 +209,14 @@ spec:
   kubectl label namespaces NAMESPACE_NAME \
     cloud.google.com/default-compute-class=COMPUTECLASS_NAME
   ```
+
+```yaml
+⚠️ pod 建立後這樣做不會有異常
+- 把 deploy 的 ComputeClass 刪掉 → ComputeClass 不可編輯，調整時可以暫時刪除
+- ComputeClass 被刪除後，殘留的 node pool 不會自動消失
+
+⭐ CCC 自動產生的 nodepool 預設 zone 跟 cluster 一致，但當該 zone 長不出來時，會長其他
+```
 
 ## [ResourceFlavor](https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/)
 
@@ -269,3 +275,11 @@ spec:
     spec:
       clusterQueue: combined-cluster-queue
     ```
+
+## 參考文章
+
+[Practical Guide to Kueue and Custom Compute Classes](https://medium.com/google-cloud/practical-guide-to-kueue-and-custom-compute-classes-85a3fe287487)
+
+[Compute Flexible CRDs](https://docs.cloud.google.com/compute/docs/instances/committed-use-discounts-overview?hl=zh-tw#spend_based)
+
+[GKE Custom Compute Class Examples](https://github.com/vszal/gke-custom-compute-class-examples)
