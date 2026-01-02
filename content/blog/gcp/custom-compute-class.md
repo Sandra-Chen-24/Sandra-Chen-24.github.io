@@ -276,6 +276,14 @@ spec:
       clusterQueue: combined-cluster-queue
     ```
 
+## tfk8s
+
+- 用途：把現有的 Kubernetes YAML 轉換成 Terraform
+```
+# 直接將現有的 ComputeClass 轉成 TF
+kubectl get computeclass highmem-xxx -o yaml | tfk8s -m
+```
+
 ## 參考文章
 
 [Practical Guide to Kueue and Custom Compute Classes](https://medium.com/google-cloud/practical-guide-to-kueue-and-custom-compute-classes-85a3fe287487)

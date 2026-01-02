@@ -12,3 +12,5 @@ categories = ["terraform"]
 - 使用 terraform 設定 kubelet_config 區塊，預設會把 cpuCfsQuota 設定為 false，跟 GCP API 相反，GCP API 預設設定為 true
 -> This issue is fixed in the "7.6.0" terraform google provider version
 [v7.6.0](https://github.com/hashicorp/terraform-provider-google/releases/tag/v7.6.0)
+
+terragrunt plan -no-color > plan.out
