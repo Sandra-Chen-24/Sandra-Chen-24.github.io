@@ -15,6 +15,66 @@ categories = ["gcp"]
   - GKE 1.33.3-gke.1136000 以上版本 [nodePoolAutoCreation]
   - GKE 1.33.3-gke.1136000 以下版本:啟用叢集層級的節點自動佈建功能 [Node auto-provisioning]
     - cluster 版本大於要求，但 nodepool 小於要求，自動長出來的 nodepool 會跟 cluster 同版本
+
+    ```text
+    版本 (Version)：
+    預設情況下，自動產生的節點池版本會跟隨叢集的控制面版本
+
+    區域 (Zones)：
+    如果調整 Default node zones 為多區（如 a, b, c），自動產生的節點池通常會涵蓋這些區域，
+    因為 GKE 會根據叢集配置來建立對應區域的受控執行個體群組 (GKE Node Pool)。
+    除非在 ComputeClass 的 priorities 中有明確限制 location.zones，否則會優先遵循叢集的區域設定
+    ```
+
+    ```yaml
+    apiVersion: cloud.google.com/v1
+    kind: ComputeClass
+    metadata:
+      name: accelerator
+    spec:
+      nodePoolAutoCreation:
+        enabled: true
+      priorities:
+        - gpu:
+            type: nvidia-tesla-a100
+            count: 1
+          location:
+            zones:
+              - "us-central1-a"
+              - "us-central1-b"
+      whenUnsatisfiable: DoNotScaleUp
+    ```
+
+    - 如果 CCC 沒有指定 zone 那會依照 default node zones，建議可以類似以下這樣寫
+
+    ```yaml
+    # a 區用完的話就會failback 到 b or c 區
+    apiVersion: cloud.google.com/v1
+    kind: ComputeClass
+    metadata:
+      name: accelerator-ai-preferred
+    spec:
+      nodePoolAutoCreation:
+        enabled: true
+      priorities:
+        # --- Priority 1:  ---
+        - gpu:
+            type: nvidia-tesla-a100
+            count: 1
+          location:
+            zones:
+              - "us-central1-a" # Specify your target AI Zone
+        # --- Priority 2: ---
+        - gpu:
+            type: nvidia-tesla-a100
+            count: 1
+          location:
+            zones:
+              - "us-central1-b"
+              - "us-central1-c"
+      whenUnsatisfiable: DoNotScaleUp
+    ```
+
 - 定義自動調度資源的門檻和參數，以便移除未充分利用的節點 [autoscalingPolicy]
 - 使用預約資源 [reservations]
 - 內建的 ComputeClass：在 Standard 叢集中執行 Autopilot 模式工作負載 [適用於 1.34.1-gke.1829001 以上版本](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-built-in-compute-classes?hl=zh-tw)
@@ -169,6 +229,13 @@ spec:
 ### nodePoolGroup [TODO]
 
 - 將多個節點集區分組為單一邏輯單元，稱為「集合」。這個分組功能可讓您將共用設定套用至多個節點集區
+
+```text
+NodePoolGroup 主要用途在 TPU 訓練或 HPC 相關的任務，確保保算力「同進同出」
+設定方式：workloadType: HIGH_THROUGHPUT 搭配 nodePoolGroup
+告訴 GKE 這群 Node Pools 是生命共同體，如果需要維護或調度，GKE 會傾向讓它們保持全體在線的狀態，少了一部分節點可能導致整個訓練任務卡住
+如果是一般 API 或 Microservice 其實不一定會用到
+```
 
 ```yaml
 spec:
