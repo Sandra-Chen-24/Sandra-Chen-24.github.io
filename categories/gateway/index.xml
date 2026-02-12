@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gateway on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/gateway/</link><description>Recent content in Gateway on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 31 Oct 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/gateway/index.xml" rel="self" type="application/rss+xml"/><item><title>gateway api vs api gateway</title><link>https://sandra-chen-24.github.io/blog/gateway/basic/</link><pubDate>Fri, 31 Oct 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gateway/basic/</guid><description>&lt;h2 id="api-gateway"&gt;API Gateway
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;作為所有 API 請求的入口（entry point）&lt;/li&gt;
+&lt;li&gt;提供：
+&lt;ul&gt;
+&lt;li&gt;Routing（依路徑導向不同服務）&lt;/li&gt;
+&lt;li&gt;Authentication / Authorization&lt;/li&gt;
+&lt;li&gt;Rate limiting&lt;/li&gt;
+&lt;li&gt;Caching&lt;/li&gt;
+&lt;li&gt;Logging / Metrics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;常見實作：
+&lt;ul&gt;
+&lt;li&gt;AWS API Gateway&lt;/li&gt;
+&lt;li&gt;Kong&lt;/li&gt;
+&lt;li&gt;NGINX Gateway&lt;/li&gt;
+&lt;li&gt;Istio Gateway（在 Service Mesh 架構中）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="gateway-api"&gt;Gateway API
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener"
+ &gt;官方文件&lt;/a&gt;
+&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/standalone-neg?hl=zh-tw#uses_with" target="_blank" rel="noopener"
+ &gt;neg&lt;/a&gt;
+&lt;a class="link" href="https://hackmd.io/@QI-AN/Understanding-and-Implementing-the-Kubernetes-Gateway-API" target="_blank" rel="noopener"
+ &gt;t&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes 官方的新一代網路 API 標準，用來取代早期的 Ingress，是一組 Kubernetes CRD（Custom Resource Definition）&lt;/li&gt;
+&lt;li&gt;主要資源：[GatewayClass -&amp;gt; Gateway -&amp;gt; HTTPRoute -&amp;gt; Service 或 GatewayClass -&amp;gt; Gateway -&amp;gt; TLSRoute -&amp;gt; Service]
+&lt;ul&gt;
+&lt;li&gt;GatewayClass&lt;/li&gt;
+&lt;li&gt;Gateway -&amp;gt; 入口 IP&lt;/li&gt;
+&lt;li&gt;HTTPRoute&lt;/li&gt;
+&lt;li&gt;TCPRoute ?&lt;/li&gt;
+&lt;li&gt;UDPRoute ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;讓不同廠商（例如 Istio、NGINX、Traefik、HAProxy、Linkerd）可以共用同一套 Gateway 規範，達成：
+&lt;ul&gt;
+&lt;li&gt;統一配置方式&lt;/li&gt;
+&lt;li&gt;支援更細緻的路由規則&lt;/li&gt;
+&lt;li&gt;支援多租戶、多 namespace 管理&lt;/li&gt;
+&lt;li&gt;清楚分層：Infra team 管 Gateway，App team 管 Route&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="測試未正式生效的域名"&gt;測試未正式生效的域名
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --resolve &amp;lt;hostname&amp;gt;:&amp;lt;port&amp;gt;:&amp;lt;ip&amp;gt; &amp;lt;url&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;❯ curl --resolve hall.vir888.com:443:35.201.227.203 https://hall.vir888.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --resolve hall.epbyofzj.com:443:34.160.139.10 https://hall.epbyofzj.com/kevintest -H &amp;#39;referer: https://hall.dctest999.com&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;不能在 Gateway 處理是因為 HTTPRoute rules 的 matches 只能有 16 個&lt;/p&gt;</description></item></channel></rss>

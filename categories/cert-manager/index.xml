@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cert-Manager on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/cert-manager/</link><description>Recent content in Cert-Manager on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 11 Dec 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/cert-manager/index.xml" rel="self" type="application/rss+xml"/><item><title>cert-manager</title><link>https://sandra-chen-24.github.io/blog/cert-manager/cert-manager/</link><pubDate>Thu, 11 Dec 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/cert-manager/cert-manager/</guid><description>&lt;h2 id="自動化申請免費的-lets-encrypt-憑證"&gt;自動化申請免費的 Let&amp;rsquo;s Encrypt 憑證
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;💡 運作原理：DNS-01 挑戰(Challenge)自動化&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cert-manager 產生一個隨機字符串&lt;/li&gt;
+&lt;li&gt;將該字符串以一條特殊的 TXT 紀錄的形式發佈到您的 DNS 服務器上&lt;/li&gt;
+&lt;li&gt;如果 Let&amp;rsquo;s Encrypt 能夠在 DNS 服務器上找到這條正確的 TXT 紀錄，就證明您擁有網域，然後頒發憑證&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://charts.jetstack.io" target="_blank" rel="noopener"
+ &gt;Chart_cert-manager&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;是 Kubernetes 的自動憑證管理工具，最終與 Ingress 等資源整合，實現應用程式的 TLS 加密與自動續期，簡化 HTTPS 部署&lt;/li&gt;
+&lt;li&gt;建立 Resource [roles, rolebindings, clusterroles, clusterrolebindings, serviceaccounts, deployment, service]
+&lt;ul&gt;
+&lt;li&gt;cert-manager：扮演著整個系統的大腦和協調者
+&lt;ul&gt;
+&lt;li&gt;根據 Certificate 資源的定義，啟動與 ACME 伺服器 (如 Let&amp;rsquo;s Encrypt) 溝通的流程&lt;/li&gt;
+&lt;li&gt;負責創建 Challenge 資源（例如 DNS-01 挑戰），並等待 ExternalDNS 或 HTTP-01 服務完成驗證&lt;/li&gt;
+&lt;li&gt;追蹤憑證的到期日，並在憑證到期前自動啟動續期流程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;cert-manager-cainjector
+&lt;ul&gt;
+&lt;li&gt;當 cert-manager 創建或更新自身的 CA 憑證時，cainjector 會自動將這些 CA 憑證注入到上述目標資源中，確保它們能夠正確地信任和與 cert-manager 的 Webhook (或其他服務) 進行 TLS 通訊&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;cert-manager-webhook：扮演著守門員的角色，確保只有有效的、格式正確的 cert-manager 資源才能進入 Cluster
+&lt;ul&gt;
+&lt;li&gt;在使用者創建或修改 Certificate、Issuer 等資源時，在資源被寫入 etcd 之前，對其進行嚴格的驗證&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;建立 CRDs
+&lt;ul&gt;
+&lt;li&gt;CertificateRequest&lt;/li&gt;
+&lt;li&gt;Certificate&lt;/li&gt;
+&lt;li&gt;Challenge&lt;/li&gt;
+&lt;li&gt;ClusterIssuer&lt;/li&gt;
+&lt;li&gt;Issuer&lt;/li&gt;
+&lt;li&gt;Order&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;letsencrypt 設定&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Issuer(頒發者):訂義憑證來源（如 Let&amp;rsquo;s Encrypt、自簽）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Issuer 作用範圍為特定 Namespace&lt;/li&gt;
+&lt;li&gt;ClusterIssuer 作用範圍為整個 Cluster
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;設定 solvers [external-dns]&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# --- DNS-01 挑戰配置 ---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; solvers:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - dns01:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; # cert-manager 將呼叫此 DNS 服務商的 API
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; clouddns:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; # 您的 GCP 專案 ID
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; project: my-gcp-project-id
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Certificate:聲明你想要什麼樣的憑證（例如：example.com 的憑證），憑證簽發後會將 .crt (憑證) 和 .key (私鑰) 儲存為 Secret&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一旦 Certificate 資源被創建，cert-manager 就會啟動 DNS-01 流程，ExternalDNS 會自動在您的 DNS 服務商上創建 TXT 紀錄，完成驗證並自動頒發憑證到 my-app-tls-secret 中
+&lt;a class="link" href="https://kubernetes-sigs.github.io/external-dns" target="_blank" rel="noopener"
+ &gt;Chart_external-dns&lt;/a&gt;
+-&amp;gt; 會自動建立 Cloud DNS 上的資訊&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/emberstack/helm-charts" target="_blank" rel="noopener"
+ &gt;Chart_Kubernetes-Reflector&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/emberstack/kubernetes-reflector" target="_blank" rel="noopener"
+ &gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;是一個專門設計用於自動化 Secret 和 ConfigMap 同步的控制器，允許在集中的 Namespace 中定義 Secret 或 ConfigMap，然後 Reflector 會將自動複製（或稱「反射」）到您指定的其他目標 (Target) Namespaces 中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 有這個 annotations 就會同步到其他 ns
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;annotations:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; reflector.v1.k8s.emberstack.com/auto-reflects: &amp;#34;True&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

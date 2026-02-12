@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tools on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/tools/</link><description>Recent content in Tools on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Wed, 04 Feb 2026 11:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>husky</title><link>https://sandra-chen-24.github.io/blog/husky/husky/</link><pubDate>Wed, 04 Feb 2026 11:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/husky/husky/</guid><description>&lt;h2 id=""&gt;
+&lt;/h2&gt;</description></item><item><title>套件們</title><link>https://sandra-chen-24.github.io/blog/golang/tools/</link><pubDate>Wed, 24 Sep 2025 10:54:57 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/golang/tools/</guid><description>&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/gin-gonic/gin # http router
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/ThreeDotsLabs/watermill # event system (CQRS)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;gt;&amp;gt; 替換 redis queue
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/spf13/afero # filesystem abstracts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gorm.io/gorm # database abstracts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/redis/go-redis/v9 # redis sdk
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/spf13/cobra # cli framework
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/spf13/viper # config framework
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go.opentelemetry.io/otel # observability
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[小工具]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/spf13/pflag # cli flag helper
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;gt;&amp;gt; cli 快捷(golang 原生的套件叫做flag)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/samber/lo # helper
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;gt;&amp;gt; 有別人寫好的小工具
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;github.com/spf13/cast # helper
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>

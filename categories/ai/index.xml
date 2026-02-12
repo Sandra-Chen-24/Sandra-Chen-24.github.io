@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ai on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/ai/</link><description>Recent content in Ai on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 06 Feb 2026 11:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Gemini Code Assist</title><link>https://sandra-chen-24.github.io/blog/gemini-code-assist/gemini-code-assist/</link><pubDate>Fri, 06 Feb 2026 11:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gemini-code-assist/gemini-code-assist/</guid><description>&lt;h2 id="使用"&gt;使用
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;在 VScode 安專 plugin [Gemini Code Assist]，用聊天的方式下 prompt&lt;/li&gt;
+&lt;li&gt;Custom Commands：常用 prompt 封裝成簡短的斜線指令 /unit-test&lt;/li&gt;
+&lt;li&gt;非 agent 模式: 問什麼答什麼(字典)，要自己複製貼上(出一張嘴)，只看當前檔案&lt;/li&gt;
+&lt;li&gt;agent 模式：給它目標會自動執行修改程式，懂整個專案架構
+&lt;ul&gt;
+&lt;li&gt;Gemini CLI
+&lt;ul&gt;
+&lt;li&gt;Google 官方提供的 Google Cloud SDK (gcloud)&lt;/li&gt;
+&lt;li&gt;社群開發的開源工具（gemini-cli）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;GCA Agent Mode 打開 plugin 開關&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Gemini CLI Extensions 線上商店有很多插件可以安裝&lt;/li&gt;
+&lt;li&gt;Conductor(上下文驅動開發)：停下來、想清楚、再開工，會先問使用者很多問題 [/conductor:setup]&lt;/li&gt;
+&lt;li&gt;Spec Driven vs Vibe Coding
+&lt;ul&gt;
+&lt;li&gt;Spec Driven:Gemini CLI 寫完會自動幫你 git commit&lt;/li&gt;
+&lt;li&gt;Vibe Coding:關掉視窗就沒有紀錄&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Gemini CLI vs Antigravity&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

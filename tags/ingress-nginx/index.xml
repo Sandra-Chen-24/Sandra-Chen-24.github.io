@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ingress-Nginx on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/ingress-nginx/</link><description>Recent content in Ingress-Nginx on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 11 Dec 2025 11:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/ingress-nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>ingress-nginx</title><link>https://sandra-chen-24.github.io/blog/ingress-nginx/ingress-nginx/</link><pubDate>Thu, 11 Dec 2025 11:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/ingress-nginx/ingress-nginx/</guid><description>&lt;h2 id="ingress-nginx-vs-nginx-ingress"&gt;ingress-nginx vs nginx-ingress
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;ingress-nginx (Kubernetes 官方) -&amp;gt; 安裝控制器本身，處理特定業務邏輯的 「Ingress 規則」需要另外建立 kind: Ingress 資源
+&lt;ul&gt;
+&lt;li&gt;擴充性極強：內建了許多 Lua 腳本來處理像是 Prometheus 指標、動態平衡（Dynamic Load Balancing）等功能&lt;/li&gt;
+&lt;li&gt;功能全開：許多進階功能（如 URL 重寫 Rewrite）直接透過 Annotation 就能用&lt;/li&gt;
+&lt;li&gt;annotation 前綴:nginx.ingress.kubernetes.io/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;nginx-ingress (NGINX/F5 官方)
+&lt;ul&gt;
+&lt;li&gt;穩定與效能：配置更接近原生 NGINX，邏輯較簡單，執行更穩定&lt;/li&gt;
+&lt;li&gt;CRDs 管理：他們更傾向使用 VirtualServer 這種自定義資源來管理，而不是寫一堆長長的 Annotation&lt;/li&gt;
+&lt;li&gt;annotation 前綴:nginx.org/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ingress-nginx-to-gateway"&gt;ingress-nginx to gateway
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;基礎設施定義:ingress-class -&amp;gt; GatewayClass&lt;/li&gt;
+&lt;li&gt;進入點/IP/TLS:ingress (metadata) -&amp;gt; Gateway&lt;/li&gt;
+&lt;li&gt;路由規則:ingress (rules) -&amp;gt; HTTPRoute&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ingress-nginx-helm-chart-471-"&gt;ingress-nginx helm chart 4.7.1 (&lt;a class="link" href="https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx" target="_blank" rel="noopener"
+ &gt;https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx&lt;/a&gt;)
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/kubernetes/ingress-nginx/blob/helm-chart-4.7.1/charts/ingress-nginx/values.yaml" target="_blank" rel="noopener"
+ &gt;values.yaml&lt;/a&gt;
+&lt;a class="link" href="https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/" target="_blank" rel="noopener"
+ &gt;nginx-configuration&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PodDisruptionBudget:.Values.controller.minAvailable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-poddisruptionbudget.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.Values.controller.kind 為 Deployment
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.Values.controller.autoscaling.enabled 為 true -&amp;gt; .Values.controller.autoscaling.minReplicas &amp;gt; 1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;ServiceAccount:{{- if or .Values.serviceAccount.create -}} 沒預設會預設建立&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-serviceaccount.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;serviceAccount:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; create: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: &amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; automountServiceAccountToken: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; annotations: {}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;ClusterRole、ClusterRoleBinding、Role、RoleBinding&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/clusterrole.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/clusterrolebinding.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-role.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-rolebinding.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;ConfigMap:修改這些設定會直接影響整個叢集中所有透過該 Ingress Controller 進出的流量 [在 gateway 中轉換為 GCPBackendPolicy 或 FrontendConfig]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-configmap.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 安全性與權限 (Security)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;allow-snippet-annotations:&amp;#34;true&amp;#34;，是否允許在個別的 Ingress 資源中使用 configuration-snippet 等註解來插入自定義 Nginx 設定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;http-snippet:是一個非常強大的「後門」設定，直接將原生的 Nginx 配置代碼插入到 nginx.conf 檔案的 http 區塊（block）內
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;e.g.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http-snippet: |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; server {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; listen 18080;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location /nginx_status {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allow all;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stub_status on;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; location / {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; return 404;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt; server: 對應特定的主機名（Host）。（由 server-snippet 設定）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt; location: 對應特定的路徑（Path）。（由 location-snippet 或 Ingress Annotation 設定）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssl-dh-param:指定 Diffie-Hellman 演算法的密鑰檔案路徑，用於增強 SSL/TLS 的「完美遠向保密 (Perfect Forward Secrecy)」，防止舊的通訊內容在未來金鑰外洩時被破解
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 真實 IP 與標頭追蹤 (IP &amp;amp; Headers)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;use-forwarded-headers:&amp;#34;true&amp;#34;，是否信任並傳遞 X-Forwarded-* 標頭
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;enable-real-ip:&amp;#34;true&amp;#34;，是否啟用 Nginx 的 ngx_http_realip_module 模組，將客戶端的 IP 替換為真實的來源 IP，而不是 Load Balancer 的內部 IP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;proxy-real-ip-cidr:&amp;#34;0.0.0.0/0&amp;#34;代表完全信任，設定信任的代理伺服器 IP 範圍（CIDR），告訴 Nginx：「來自這些 IP（例如 GCP LB）的流量，請讀取其提供的真實來源 IP」
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt; ⚠️ 建議只填入確定的負載平衡器 IP 範圍:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GCP HTTP(S) Load Balancer：130.211.0.0/22 和 35.191.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Cloudflare：填入 Cloudflare 官方提供的 IP 範圍清單
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt; proxy-real-ip-cidr: &amp;#34;130.211.0.0/22,35.191.0.0/16,10.128.0.0/20,203.0.113.5/32&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;compute-full-forwarded-for:&amp;#34;true&amp;#34;，是否將目前的客戶端 IP 附加到 X-Forwarded-For 清單中，而不是直接覆蓋
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add-headers &amp;amp; proxy-set-headers:全域性地在 HTTP 回應（Add）或轉發給後端服務（Set）時加入自定義 Header
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 日誌與後端管理 (Logging &amp;amp; Backend)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;log-format-upstream:自定義發送給後端服務時的日誌格式，通常會加入 $upstream_response_time 等變數，用來監控後端服務的回應速度
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;e.g.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;log-format-upstream: &amp;#39;{ &amp;#34;time_iso8601&amp;#34;:&amp;#34;$time_iso8601&amp;#34;, &amp;#34;http_x_forwarded_for&amp;#34;:&amp;#34;$http_x_forwarded_for&amp;#34;, &amp;#34;http_host&amp;#34;:&amp;#34;$host&amp;#34;, &amp;#34;method&amp;#34;:&amp;#34;$request_method&amp;#34;, &amp;#34;bytes_sent&amp;#34;:&amp;#34;$bytes_sent&amp;#34;, &amp;#34;pod_name&amp;#34;:&amp;#34;$hostname&amp;#34;, &amp;#34;path&amp;#34;:&amp;#34;$request_uri&amp;#34;, &amp;#34;parameters&amp;#34;:&amp;#34;$args&amp;#34;, &amp;#34;referrer&amp;#34;:&amp;#34;$http_referer&amp;#34;, &amp;#34;user_agent&amp;#34;:&amp;#34;$http_user_agent&amp;#34;, &amp;#34;remote_addr&amp;#34;:&amp;#34;$remote_addr&amp;#34;, &amp;#34;request_time&amp;#34;:&amp;#34;$request_time&amp;#34;, &amp;#34;request_uri&amp;#34;:&amp;#34;$host$request_uri&amp;#34;, &amp;#34;request_body&amp;#34;:&amp;#34;$request_body&amp;#34;, &amp;#34;response_time&amp;#34;:&amp;#34;$upstream_response_time&amp;#34;, &amp;#34;response_size&amp;#34;:&amp;#34;$upstream_response_length&amp;#34;, &amp;#34;status_code&amp;#34;:&amp;#34;$status&amp;#34;, &amp;#34;remote_user&amp;#34;:&amp;#34;$remote_user&amp;#34;, &amp;#34;time_local&amp;#34;:&amp;#34;$time_local&amp;#34;, &amp;#34;request&amp;#34;:&amp;#34;$request&amp;#34;, &amp;#34;body_bytes_sent&amp;#34;:&amp;#34;$body_bytes_sent&amp;#34;, &amp;#34;request_length&amp;#34;:&amp;#34;$request_length&amp;#34;, &amp;#34;proxy_upstream_name&amp;#34;:&amp;#34;$proxy_upstream_name&amp;#34;, &amp;#34;proxy_alternative_upstream_name&amp;#34;:&amp;#34;$proxy_alternative_upstream_name&amp;#34;, &amp;#34;upstream_addr&amp;#34;:&amp;#34;$upstream_addr&amp;#34;, &amp;#34;upstream_status&amp;#34;:&amp;#34;$upstream_status&amp;#34;, &amp;#34;req_id&amp;#34;:&amp;#34;$req_id&amp;#34; }&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;enable-access-log-for-default-backend:&amp;#34;true&amp;#34;，是否記錄「找不到路由 (404)」時導向 Default Backend 的訪問日誌
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;load-balance:設定負載平衡演算法（預設為 round_robin），可改為 least_conn (最少連接) 或 ewma (指數加權移動平均)，後者在微服務環境中通常能提供更穩定的延遲
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# controller-service-internal.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.Values.controller.service.internal.annotations
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{{- if and .Values.controller.service.enabled .Values.controller.service.internal.enabled .Values.controller.service.internal.annotations}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;controller:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; type: LoadBalancer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; enabled: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; externalTrafficPolicy: Local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; enableHttp: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; enableHttps: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ports:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http: 80
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; https: 443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; targetPorts:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http: http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; https: https
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; internal:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; enabled: true
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; loadBalancerSourceRanges:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - 10.0.0.0/8 # 預設內網網段全開
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; loadBalancerIP: &amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; annotations:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; external-dns.alpha.kubernetes.io/hostname: template-ingress-internal-lb.out.in.qa.rdapp.vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; networking.gke.io/load-balancer-type: Internal
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-service.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-service-metrics.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-service-webhook.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Deployment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-deployment.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-hpa.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-ingressclass.yaml [IngressClass]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-prometheusrules.yaml [PrometheusRule]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/controller-servicemonitor.yaml [ServiceMonitor]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml [ValidatingWebhookConfiguration]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/admission-webhooks/cert-manager.yaml [Certificate]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: ingress-nginx/templates/admission-webhooks/cert-manager.yaml [Issuer]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;controller:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; admissionWebhooks:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; enabled: true
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="資源-kind-ingress"&gt;資源 kind: Ingress
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;⭐⭐⭐ 全域攔截。當所有其他的 Ingress 規則（Host 或 Path）都匹配失敗時，會轉發到這裡
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;✨ 使用 spec.defaultBackend，沒有 rules 區塊，應到 nginx.conf 中的 default_server
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: php/templates/ingress-default-backend.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apiVersion: networking.k8s.io/v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kind: Ingress
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;metadata:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: template-default-backend
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;spec:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ingressClassName: template-gateway
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; defaultBackend:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: template-nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; port:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tls:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - hosts:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - ${host}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secretName: wildcard-tls-rdapp-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;⭐⭐⭐ 精確匹配。只有當請求的 Host 剛好等於 ${host} 且路徑為 / 時才生效
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;✨ 使用 spec.rules 區塊，定義明確的路由條件，對應到 nginx.conf 中的特定 server { server_name ${host}; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# Source: php/templates/ingress.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apiVersion: networking.k8s.io/v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kind: Ingress
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;metadata:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: template
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; annotations:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; nginx.ingress.kubernetes.io/ssl-redirect: &amp;#34;false&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;spec:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ingressClassName: template-gateway
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tls:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - hosts:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - ${host}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; secretName: wildcard-tls-rdapp-vip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; rules:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - host: ${host}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; http:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; paths:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - path: /
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pathType: Prefix
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; backend:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; service:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: template-nginx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; port:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: http
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>

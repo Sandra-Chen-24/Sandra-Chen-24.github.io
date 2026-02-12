@@ -1,0 +1,331 @@
+<!doctype html><html lang=zh-tw dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="測試使用 Hugo Theme Stack"><title>My First Post</title><link rel=canonical href=https://sandra-chen-24.github.io/blog/golang/my-first-post/><link rel=stylesheet href=/scss/style.min.51098b80cc297c94c0f57786d4a04e7372774e5993b60facf53870128a79bf73.css><meta property='og:title' content="My First Post"><meta property='og:description' content="測試使用 Hugo Theme Stack"><meta property='og:url' content='https://sandra-chen-24.github.io/blog/golang/my-first-post/'><meta property='og:site_name' content='Sandra Chen Blog'><meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='example'><meta property='article:tag' content='hugo'><meta property='article:published_time' content='2025-08-27T11:37:57+08:00'><meta property='article:modified_time' content='2025-08-27T11:37:57+08:00'><meta name=twitter:title content="My First Post"><meta name=twitter:description content="測試使用 Hugo Theme Stack"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Sandra Chen Blog</a></h1><h2 class=site-description>Notes & Writings</h2></div></header><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/_index.zh-cn/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/page/about/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>About</span></a></li><li><a href=/page/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/page/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/page/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/demo/ style=background-color:#efc3be;color:#3d140f>Demo</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/blog/golang/my-first-post/>My First Post</a></h2><h3 class=article-subtitle>測試使用 Hugo Theme Stack</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2025-08-27T11:37:57+08:00>Wednesday, August 27, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>5 minutes read</time></div></footer></div></header><section class=article-content><p>這是我的第一篇 Hugo 文章！</p><h2 id=小節>小節</h2><ul><li>支援 Markdown 語法</li><li>可以用 shortcode 插入圖片或程式碼</li></ul><p>err = os.MkdirAll(dirPath, os.ModePerm)
+os.ModePerm -> 0777 代表 所有人都可讀寫執行，這對安全性風險很大
+0750：Owner 可讀寫執行，Group 可讀執行，其他人無法存取（符合 gosec 要求）。
+如果完全不需要 Group 存取，可以用 0700（Owner 全權，其他人完全禁止)</p><p><a class=link href=https://tour.go-zh.org/welcome/1 target=_blank rel=noopener>Go 指南</a></p><h2 id=入門教材><a class=link href=https://tour.go-zh.org/welcome/1 target=_blank rel=noopener>入門教材</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span># fmt.Printf(&#34;現在你有了 %g 個問題。\n&#34;, math.Sqrt(7))
+</span></span><span style=display:flex><span>🔢 整數類
+</span></span><span style=display:flex><span>  %b：二進位表示法
+</span></span><span style=display:flex><span>  %c：Unicode 字元（對應整數的 Unicode code point）
+</span></span><span style=display:flex><span>  %d：十進位整數
+</span></span><span style=display:flex><span>  %o：八進位整數
+</span></span><span style=display:flex><span>  %q：單引號括起來的字元常數，必要時會做跳脫
+</span></span><span style=display:flex><span>  %x：十六進位（小寫 a-f）
+</span></span><span style=display:flex><span>  %X：十六進位（大寫 A-F）
+</span></span><span style=display:flex><span>  %U：Unicode 格式 U+1234
+</span></span><span style=display:flex><span>🔤 字串與切片
+</span></span><span style=display:flex><span>  %s：字串本身
+</span></span><span style=display:flex><span>  %q：雙引號括起來的字串，必要時會做跳脫
+</span></span><span style=display:flex><span>  %x：字串或 []byte 轉十六進位（小寫）
+</span></span><span style=display:flex><span>  %X：字串或 []byte 轉十六進位（大寫，字母 A-F）
+</span></span><span style=display:flex><span>🔬 浮點數與複數
+</span></span><span style=display:flex><span>  %b：科學記號，以二進位表示浮點數（指數部分是二的冪）
+</span></span><span style=display:flex><span>  %e：科學記號（小寫 e，如 -1.234000e+06）
+</span></span><span style=display:flex><span>  %E：科學記號（大寫 E，如 -1.234000E+06）
+</span></span><span style=display:flex><span>  %f：小數點表示法（不含指數，如 123.456000）
+</span></span><span style=display:flex><span>  %F：等同於 %f
+</span></span><span style=display:flex><span>  %g：自動選擇 %e 或 %f（保證最簡潔的輸出）
+</span></span><span style=display:flex><span>  %G：自動選擇 %E 或 %F
+</span></span><span style=display:flex><span>📦 通用類
+</span></span><span style=display:flex><span>  %v：值的預設格式
+</span></span><span style=display:flex><span>  %+v：值的預設格式，並輸出 struct 的欄位名
+</span></span><span style=display:flex><span>  %#v：Go 語法表示法（能直接貼回程式）
+</span></span><span style=display:flex><span>  %T：值的型別
+</span></span><span style=display:flex><span>  %%：字面上的百分號
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>## 範例
+</span></span><span style=display:flex><span>type User struct {
+</span></span><span style=display:flex><span>    Name string
+</span></span><span style=display:flex><span>    Age  int
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>u := User{&#34;Alice&#34;, 30}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>fmt.Printf(&#34;%v\n&#34;, u)   // {Alice 30}
+</span></span><span style=display:flex><span>fmt.Printf(&#34;%+v\n&#34;, u)  // {Name:Alice Age:30}
+</span></span><span style=display:flex><span>fmt.Printf(&#34;%#v\n&#34;, u)  // main.User{Name:&#34;Alice&#34;, Age:30}
+</span></span><span style=display:flex><span>fmt.Printf(&#34;%T\n&#34;, u)   // main.User
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>/**
+</span></span></span><span style=display:flex><span><span style=color:#75715e>短变量声明
+</span></span></span><span style=display:flex><span><span style=color:#75715e>在函数中，短赋值语句 := 可在隐式确定类型的 var 声明中使用。
+</span></span></span><span style=display:flex><span><span style=color:#75715e>函数外的每个语句都 必须 以关键字开始（var、func 等），因此 := 结构不能在函数外使用。
+</span></span></span><span style=display:flex><span><span style=color:#75715e>**/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#66d9ef>int</span> = <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>k</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>c</span>, <span style=color:#a6e22e>python</span>, <span style=color:#a6e22e>java</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>true</span>, <span style=color:#66d9ef>false</span>, <span style=color:#e6db74>&#34;no!&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span>, <span style=color:#a6e22e>k</span>, <span style=color:#a6e22e>c</span>, <span style=color:#a6e22e>python</span>, <span style=color:#a6e22e>java</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=switch>switch</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// 由上而下判斷，有符合條件則退出</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 無條件的 switch 跟 switch true 一樣</span>
+</span></span></code></pre></div><h2 id=defer>defer</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// 後進先出</span>
+</span></span></code></pre></div><h2 id=pointer>pointer</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Go 沒有指針運算</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 指針保存內存地址 [*T 是指向 T 類型的指針]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>42</span>, <span style=color:#ae81ff>2701</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>i</span>) <span style=color:#75715e>// [0xc0000a0040]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>j</span>) <span style=color:#75715e>// [0xc000010078]</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>p</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>i</span>         <span style=color:#75715e>// 指向 i</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>p</span>)  <span style=color:#75715e>// [0xc0000a0040]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>p</span>) <span style=color:#75715e>// [0xc0000a2040]</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>p</span>) <span style=color:#75715e>// 通过指针读取 i 的值 [42]</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>*</span><span style=color:#a6e22e>p</span> = <span style=color:#ae81ff>21</span>         <span style=color:#75715e>// 通过指针设置 i 的值</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>i</span>)  <span style=color:#75715e>// 查看 i 的值 [21]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>p</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>j</span>         <span style=color:#75715e>// 指向 j</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>p</span>) <span style=color:#75715e>// [0xc000010078]</span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>*</span><span style=color:#a6e22e>p</span> = <span style=color:#f92672>*</span><span style=color:#a6e22e>p</span> <span style=color:#f92672>/</span> <span style=color:#ae81ff>37</span>   <span style=color:#75715e>// 通过指针对 j 进行除法运算</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>j</span>) <span style=color:#75715e>// 查看 j 的值 [73]</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 結構體指針</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Vertex</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>X</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Y</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>Vertex</span>{<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>p</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>v</span>
+</span></span><span style=display:flex><span>	(<span style=color:#f92672>*</span><span style=color:#a6e22e>p</span>).<span style=color:#a6e22e>X</span> = <span style=color:#ae81ff>1e9</span> <span style=color:#75715e>// 等同於 p.X</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>v</span>) <span style=color:#75715e>// [1000000000,2]</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=slice>slice</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>primes</span> <span style=color:#f92672>:=</span> [<span style=color:#ae81ff>6</span>]<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>7</span>, <span style=color:#ae81ff>11</span>, <span style=color:#ae81ff>13</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span> = <span style=color:#a6e22e>primes</span>[<span style=color:#ae81ff>1</span>:<span style=color:#ae81ff>4</span>] <span style=color:#75715e>// [3, 5, 7]</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>s</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// slice 不儲存數據，只描述數組中的一段</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>names</span> <span style=color:#f92672>:=</span> [<span style=color:#ae81ff>4</span>]<span style=color:#66d9ef>string</span>{
+</span></span><span style=display:flex><span>		<span style=color:#e6db74>&#34;John&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#e6db74>&#34;Paul&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#e6db74>&#34;George&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#e6db74>&#34;Ringo&#34;</span>,
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>names</span>) <span style=color:#75715e>// [John Paul George Ringo]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>a</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>names</span>[<span style=color:#ae81ff>0</span>:<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>names</span>[<span style=color:#ae81ff>1</span>:<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span>) <span style=color:#75715e>// [John Paul] [Paul George]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>] = <span style=color:#e6db74>&#34;XXX&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>b</span>) <span style=color:#75715e>// John XXX] [XXX George]</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>names</span>) <span style=color:#75715e>// [John XXX George Ringo]</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// len 與 cap [長度與容量]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>s</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>7</span>, <span style=color:#ae81ff>11</span>, <span style=color:#ae81ff>13</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>) <span style=color:#75715e>// len=6 cap=6 [2 3 5 7 11 13]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 截取切片使其长度为 0</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[:<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>) <span style=color:#75715e>// len=0 cap=6 []</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 扩展其长度</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[:<span style=color:#ae81ff>4</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>) <span style=color:#75715e>// len=4 cap=6 [2 3 5 7]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 舍弃前两个值</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>s</span> = <span style=color:#a6e22e>s</span>[<span style=color:#ae81ff>2</span>:]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span>) <span style=color:#75715e>// len=2 cap=4 [5 7]</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;len=%d cap=%d %v\n&#34;</span>, len(<span style=color:#a6e22e>s</span>), cap(<span style=color:#a6e22e>s</span>), <span style=color:#a6e22e>s</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 切片的零值是 nil</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>s</span> []<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>s</span>, len(<span style=color:#a6e22e>s</span>), cap(<span style=color:#a6e22e>s</span>)) <span style=color:#75715e>// [] 0 0</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>s</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;nil!&#34;</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 用 make 建立 slice</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>a</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>5</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;a&#34;</span>, <span style=color:#a6e22e>a</span>) <span style=color:#75715e>// a len=5 cap=5 [0 0 0 0 0]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>5</span>) <span style=color:#75715e>// 第三個参數可以指定容量</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;b&#34;</span>, <span style=color:#a6e22e>b</span>) <span style=color:#75715e>// b len=0 cap=5 []</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>c</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>b</span>[:<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;c&#34;</span>, <span style=color:#a6e22e>c</span>) <span style=color:#75715e>// c len=2 cap=5 [0 0]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>d</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>[<span style=color:#ae81ff>2</span>:<span style=color:#ae81ff>5</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>printSlice</span>(<span style=color:#e6db74>&#34;d&#34;</span>, <span style=color:#a6e22e>d</span>) <span style=color:#75715e>// d len=3 cap=3 [0 0 0]</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>printSlice</span>(<span style=color:#a6e22e>s</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>x</span> []<span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s len=%d cap=%d %v\n&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>s</span>, len(<span style=color:#a6e22e>x</span>), cap(<span style=color:#a6e22e>x</span>), <span style=color:#a6e22e>x</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=函數>函數</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// 函數閉包</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>adder</span>() <span style=color:#66d9ef>func</span>(<span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>sum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>x</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>sum</span> <span style=color:#f92672>+=</span> <span style=color:#a6e22e>x</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>sum</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>pos</span>, <span style=color:#a6e22e>neg</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>adder</span>(), <span style=color:#a6e22e>adder</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#ae81ff>10</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>pos</span>(<span style=color:#a6e22e>i</span>),
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>neg</span>(<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span><span style=color:#f92672>*</span><span style=color:#a6e22e>i</span>),
+</span></span><span style=display:flex><span>		)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// fibonacci 函数</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// fibonacci 是返回一个「返回一个 int 的函数」的函数</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>fibonacci</span>() <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>f</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>fibonacci</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#ae81ff>10</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>f</span>())
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=方法>方法</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// 帶特殊接收者參數的函數</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Vertex</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>X</span>, <span style=color:#a6e22e>Y</span> <span style=color:#66d9ef>float64</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>v</span> <span style=color:#a6e22e>Vertex</span>) <span style=color:#a6e22e>Abs</span>() <span style=color:#66d9ef>float64</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>math</span>.<span style=color:#a6e22e>Sqrt</span>(<span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>X</span><span style=color:#f92672>*</span><span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>X</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Y</span><span style=color:#f92672>*</span><span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Y</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>v</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Vertex</span>) <span style=color:#a6e22e>Scale</span>(<span style=color:#a6e22e>f</span> <span style=color:#66d9ef>float64</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>X</span> = <span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>X</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>f</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Y</span> = <span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Y</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>f</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>Vertex</span>{<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Scale</span>(<span style=color:#ae81ff>10</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>Abs</span>()) <span style=color:#75715e>// 50</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 使用 v *Vertex</span>
+</span></span><span style=display:flex><span>{<span style=color:#ae81ff>30</span> <span style=color:#ae81ff>40</span>}
+</span></span><span style=display:flex><span><span style=color:#ae81ff>50</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 使用 v Vertex</span>
+</span></span><span style=display:flex><span>{<span style=color:#ae81ff>3</span> <span style=color:#ae81ff>4</span>}
+</span></span><span style=display:flex><span><span style=color:#ae81ff>5</span>
+</span></span></code></pre></div><h2 id=泛型>泛型</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// comparable 為由所有可比較類型（布爾，數字，字符串，指針，通道，可比較類型的數組，其字段都是可比較類型的結構）實現的接口</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Index 返回 x 在 s 中的下标，未找到则返回 -1。</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Ｔ可以改成任意名稱</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>Index</span>[<span style=color:#a6e22e>T</span> <span style=color:#a6e22e>comparable</span>](<span style=color:#a6e22e>s</span> []<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>x</span> <span style=color:#a6e22e>T</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>s</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// v 和 x 的类型为 T，它拥有 comparable 可比较的约束，</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// 因此我们可以使用 ==。</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>v</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>x</span> {
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>i</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Index 可以在整数切片上使用</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>si</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>20</span>, <span style=color:#ae81ff>15</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>10</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>Index</span>(<span style=color:#a6e22e>si</span>, <span style=color:#ae81ff>15</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Index 也可以在字符串切片上使用</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ss</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>string</span>{<span style=color:#e6db74>&#34;foo&#34;</span>, <span style=color:#e6db74>&#34;bar&#34;</span>, <span style=color:#e6db74>&#34;baz&#34;</span>}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>Index</span>(<span style=color:#a6e22e>ss</span>, <span style=color:#e6db74>&#34;hello&#34;</span>))
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// any</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// List 表示一个可以保存任何类型的值的单链表。</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>List</span>[<span style=color:#a6e22e>T</span> <span style=color:#66d9ef>any</span>] <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>next</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>List</span>[<span style=color:#a6e22e>T</span>]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>val</span>  <span style=color:#a6e22e>T</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>List</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>Append</span>(<span style=color:#a6e22e>v</span> <span style=color:#a6e22e>T</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>curr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>l</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>curr</span>.<span style=color:#a6e22e>next</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>curr</span> = <span style=color:#a6e22e>curr</span>.<span style=color:#a6e22e>next</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>curr</span>.<span style=color:#a6e22e>next</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>List</span>[<span style=color:#a6e22e>T</span>]{<span style=color:#a6e22e>val</span>: <span style=color:#a6e22e>v</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>List</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>Print</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>curr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>next</span> <span style=color:#75715e>// 跳過頭節點 (dummy head)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>curr</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%v -&gt; &#34;</span>, <span style=color:#a6e22e>curr</span>.<span style=color:#a6e22e>val</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>curr</span> = <span style=color:#a6e22e>curr</span>.<span style=color:#a6e22e>next</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;nil&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 建立一個 int 的鏈表</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>intList</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>List</span>[<span style=color:#66d9ef>int</span>]{}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>intList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#ae81ff>10</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>intList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#ae81ff>20</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>intList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#ae81ff>30</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Print</span>(<span style=color:#e6db74>&#34;intList: &#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>intList</span>.<span style=color:#a6e22e>Print</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 建立一個 string 的鏈表</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strList</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>List</span>[<span style=color:#66d9ef>string</span>]{}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#e6db74>&#34;Go&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#e6db74>&#34;is&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strList</span>.<span style=color:#a6e22e>Append</span>(<span style=color:#e6db74>&#34;fun&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Print</span>(<span style=color:#e6db74>&#34;strList: &#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>strList</span>.<span style=color:#a6e22e>Print</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></section><footer class=article-footer><section class=article-tags><a href=/tags/example/>Example</a>
+<a href=/tags/hugo/>Hugo</a></section></footer></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2025 -
+2026 Sandra Chen Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

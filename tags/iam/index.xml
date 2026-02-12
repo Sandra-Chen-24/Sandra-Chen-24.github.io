@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Iam on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/iam/</link><description>Recent content in Iam on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Tue, 16 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/iam/index.xml" rel="self" type="application/rss+xml"/><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gcp/service-agents/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/service-agents/</guid><description>&lt;p&gt;&lt;a class="link" href="https://cloud.google.com/iam/docs/service-agents" target="_blank" rel="noopener"
+ &gt;service-agents&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 由 Google 自動建立的 Google-managed service accounts，不會出現在「IAM → Service Accounts」清單中
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;例如：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Logging → service-PROJECT_NUMBER@gcp-sa-logging.iam.gserviceaccount.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Monitoring → service-PROJECT_NUMBER@gcp-sa-monitoring.iam.gserviceaccount.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Pub/Sub → service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 查詢角色設定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gcloud projects get-iam-policy PROJECT_ID \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --flatten=&amp;#34;bindings[].members&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --format=&amp;#34;table(bindings.role, bindings.members)&amp;#34; \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --filter=&amp;#34;bindings.members:service-${PROJECT_NUMBER}@gcp-sa-logging.iam.gserviceaccount.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item></channel></rss>
