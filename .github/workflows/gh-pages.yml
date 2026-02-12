@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - main  # Set a branch name to trigger deployment
+      - main # Set a branch name to trigger deployment
   pull_request:
 
 jobs:
@@ -16,14 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true  # Fetch Hugo themes (true OR recursive)
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          submodules: recursive # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: '0.134.2'   # 建議 Extended 穩定版
-          extended: true            # 要支援 SCSS/SASS 必須加這個
+          hugo-version: "0.155.0" # 建議 Extended 穩定版
+          extended: true # 要支援 SCSS/SASS 必須加這個
 
       - name: Install theme
         run: |
@@ -42,3 +42,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          # 建議指定部署分支，預設通常是 gh-pages
+          publish_branch: gh-pages
+          force_orphan: true # 讓部署歷史保持乾淨，減少衝突

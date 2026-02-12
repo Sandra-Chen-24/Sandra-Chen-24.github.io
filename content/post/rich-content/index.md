@@ -21,14 +21,6 @@ Hugo ships with several [Built-in Shortcodes](https://gohugo.io/content-manageme
 
 ---
 
-## Twitter Simple Shortcode
-
-{{< twitter_simple user="DesignReviewed" id="1085870671291310081" >}}
-
-<br>
-
----
-
 ## Vimeo Simple Shortcode
 
 {{< vimeo_simple 48912912 >}}
@@ -36,10 +28,6 @@ Hugo ships with several [Built-in Shortcodes](https://gohugo.io/content-manageme
 ## bilibilibi Shortcode
 
 {{< bilibili av498363026 >}}
-
-## Gist Shortcode
-
-{{< gist spf13 7896402 >}}
 
 ## Gitlab Snippets Shortcode
 
