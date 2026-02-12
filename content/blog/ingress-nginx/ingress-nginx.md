@@ -9,7 +9,7 @@ categories = ["ingress-nginx"]
 
 ## ingress-nginx vs nginx-ingress
 
-- ingress-nginx (Kubernetes 官方)
+- ingress-nginx (Kubernetes 官方) -> 安裝控制器本身，處理特定業務邏輯的 「Ingress 規則」需要另外建立 kind: Ingress 資源
   - 擴充性極強：內建了許多 Lua 腳本來處理像是 Prometheus 指標、動態平衡（Dynamic Load Balancing）等功能
   - 功能全開：許多進階功能（如 URL 重寫 Rewrite）直接透過 Annotation 就能用
   - annotation 前綴:nginx.ingress.kubernetes.io/
@@ -125,7 +125,7 @@ controller:
                 - 10.0.0.0/8 # 預設內網網段全開
             loadBalancerIP: ""
             annotations:
-                external-dns.alpha.kubernetes.io/hostname: outside-service-ingress-internal-lb.out.in.qa.rdapp.vip
+                external-dns.alpha.kubernetes.io/hostname: template-ingress-internal-lb.out.in.qa.rdapp.vip
                 networking.gke.io/load-balancer-type: Internal
 
 # Source: ingress-nginx/templates/controller-service.yaml
@@ -148,4 +148,54 @@ controller:
 controller:
   admissionWebhooks:
     enabled: true
+```
+
+## 資源 kind: Ingress
+
+```text
+⭐⭐⭐ 全域攔截。當所有其他的 Ingress 規則（Host 或 Path）都匹配失敗時，會轉發到這裡
+✨ 使用 spec.defaultBackend，沒有 rules 區塊，應到 nginx.conf 中的 default_server
+# Source: php/templates/ingress-default-backend.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name:  template-default-backend
+spec:
+  ingressClassName: template-gateway
+  defaultBackend:
+    service:
+      name: template-nginx
+      port:
+        name: http
+  tls:
+    - hosts:
+        - ${host}
+      secretName: wildcard-tls-rdapp-vip
+
+⭐⭐⭐ 精確匹配。只有當請求的 Host 剛好等於 ${host} 且路徑為 / 時才生效
+✨ 使用 spec.rules 區塊，定義明確的路由條件，對應到 nginx.conf 中的特定 server { server_name ${host}; }
+# Source: php/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: template
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: template-gateway
+  tls:
+    - hosts:
+        - ${host}
+      secretName: wildcard-tls-rdapp-vip
+  rules:
+    - host: ${host}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: template-nginx
+                port:
+                  name: http
 ```
