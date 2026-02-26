@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gateway on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/gateway/</link><description>Recent content in Gateway on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 18 Sep 2025 15:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/gateway/index.xml" rel="self" type="application/rss+xml"/><item><title>權限相關</title><link>https://sandra-chen-24.github.io/blog/gateway/gateway/</link><pubDate>Thu, 18 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gateway/gateway/</guid><description>&lt;p&gt;&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/secure-gateway?hl=zh-tw" target="_blank" rel="noopener"
+ &gt;secure-gateway&lt;/a&gt;
+&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-security#gateway-management" target="_blank" rel="noopener"
+ &gt;gateway-management&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;確保你的 GKE 版本在 1.24 以上，啟動 Gateway API 功能[大概要三分鐘]&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gcloud container clusters update [CLUSTER_NAME] --gateway-api=standard --zone [ZONE] --project [PROJECT_ID]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[檢查]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ❯ kubectl get crd | grep gateway.networking.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gatewayclasses.gateway.networking.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gateways.gateway.networking.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; httproutes.gateway.networking.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; referencegrants.gateway.networking.k8s.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ❯ kubectl get gatewayclass
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; NAME CONTROLLER ACCEPTED
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gke-l7-global-external-managed networking.gke.io/gateway True
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gke-l7-gxlb networking.gke.io/gateway True
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gke-l7-regional-external-managed networking.gke.io/gateway True
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; gke-l7-rilb networking.gke.io/gateway True
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/gatewayclass-capabilities?hl=zh-tw" target="_blank" rel="noopener"
+ &gt;GatewayClass 介紹&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GatewayClass
+&lt;ul&gt;
+&lt;li&gt;gke-l7-global-external-managed:全域外部，面向全球用戶，需要 Google Edge 緩存/WAF (Cloud Armor)&lt;/li&gt;
+&lt;li&gt;gke-l7-gxlb:經典全域外部，舊版架構（Classic），除非有特殊相容性需求，否則優先選上面的 Managed 版本&lt;/li&gt;
+&lt;li&gt;gke-l7-regional-external-managed：區域外部，僅服務特定地區（如台灣），需要符合資料在地化法規&lt;/li&gt;
+&lt;li&gt;gke-l7-rilb:內部 (Internal)，VPC 內部、叢集內部服務互通&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways?hl=zh-tw" target="_blank" rel="noopener"
+ &gt;部署閘道&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

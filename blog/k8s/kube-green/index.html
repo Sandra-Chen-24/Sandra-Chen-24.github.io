@@ -1,0 +1,274 @@
+<!doctype html><html lang=zh-tw dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="kube-green Install Helm Charts Values repositories: # https://kube-green.dev - name: kube-green url: https://kube-green.github.io/helm-charts templates: kube-green: &amp;kube-green namespace: kube-green chart: kube-green/kube-green version: 0.7.1 服務組成 Deployment [kube-green-controller-manager]\n使用憑證 metrics-server-cert & webhook-server-cert Service kube-green-controller-manager-metrics-service kube-green-webhook-service Certificate：webhooks require a valid certificate to expose the webhook server to the Kubernetes API server\nkube-green-metrics-certs kube-green-serving-cert Issuer [kube-green-selfsigned-issuer] ValidatingWebhookConfiguration：是 Kubernetes 中的「守門員」機制，是 Admission Controller 的一部分，在資源（例如 Pod, Deployment,SleepInfo）被寫入 etcd 之前，先將該資源發送給一個外部服務進行「審核」\n"><title>kube-green</title><link rel=canonical href=https://sandra-chen-24.github.io/blog/k8s/kube-green/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.390cc81d180d80110703ea467e355a4f3a0f44f25d4e957842790824fb5f2ef2.css><meta property='og:title' content="kube-green"><meta property='og:description' content="kube-green Install Helm Charts Values repositories: # https://kube-green.dev - name: kube-green url: https://kube-green.github.io/helm-charts templates: kube-green: &amp;kube-green namespace: kube-green chart: kube-green/kube-green version: 0.7.1 服務組成 Deployment [kube-green-controller-manager]\n使用憑證 metrics-server-cert & webhook-server-cert Service kube-green-controller-manager-metrics-service kube-green-webhook-service Certificate：webhooks require a valid certificate to expose the webhook server to the Kubernetes API server\nkube-green-metrics-certs kube-green-serving-cert Issuer [kube-green-selfsigned-issuer] ValidatingWebhookConfiguration：是 Kubernetes 中的「守門員」機制，是 Admission Controller 的一部分，在資源（例如 Pod, Deployment,SleepInfo）被寫入 etcd 之前，先將該資源發送給一個外部服務進行「審核」\n"><meta property='og:url' content='https://sandra-chen-24.github.io/blog/k8s/kube-green/'><meta property='og:site_name' content='Sandra Chen Blog'><meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='cost'><meta property='article:published_time' content='2025-12-18T11:30:00+08:00'><meta property='article:modified_time' content='2025-12-18T11:30:00+08:00'><meta name=twitter:title content="kube-green"><meta name=twitter:description content="kube-green Install Helm Charts Values repositories: # https://kube-green.dev - name: kube-green url: https://kube-green.github.io/helm-charts templates: kube-green: &amp;kube-green namespace: kube-green chart: kube-green/kube-green version: 0.7.1 服務組成 Deployment [kube-green-controller-manager]\n使用憑證 metrics-server-cert & webhook-server-cert Service kube-green-controller-manager-metrics-service kube-green-webhook-service Certificate：webhooks require a valid certificate to expose the webhook server to the Kubernetes API server\nkube-green-metrics-certs kube-green-serving-cert Issuer [kube-green-selfsigned-issuer] ValidatingWebhookConfiguration：是 Kubernetes 中的「守門員」機制，是 Admission Controller 的一部分，在資源（例如 Pod, Deployment,SleepInfo）被寫入 etcd 之前，先將該資源發送給一個外部服務進行「審核」\n"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Sandra Chen Blog</a></h1><h2 class=site-description>Notes & Writings</h2></div></header><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/_index.zh-cn/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/page/about/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>About</span></a></li><li><a href=/page/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/page/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/page/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/k8s/ style=background-color:#efbecc;color:#3d0f1c>K8s</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/blog/k8s/kube-green/>kube-green</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2025-12-18T11:30:00+08:00>Thursday, December 18, 2025</time></div></footer></div></header><section class=article-content><h2 id=kube-green><a class=link href=https://kube-green.dev/docs/getting-started/ target=_blank rel=noopener>kube-green</a></h2><ul><li>Install <a class=link href=https://kube-green.github.io/helm-charts/ target=_blank rel=noopener>Helm Charts</a><ul><li><a class=link href=https://github.com/kube-green/kube-green/blob/main/charts/kube-green/values.yaml target=_blank rel=noopener>Values</a></li></ul></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>repositories:
+</span></span><span style=display:flex><span>  # https://kube-green.dev
+</span></span><span style=display:flex><span>  - name: kube-green
+</span></span><span style=display:flex><span>    url: https://kube-green.github.io/helm-charts
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>templates:
+</span></span><span style=display:flex><span>  kube-green: &amp;kube-green
+</span></span><span style=display:flex><span>    namespace: kube-green
+</span></span><span style=display:flex><span>    chart: kube-green/kube-green
+</span></span><span style=display:flex><span>    version: 0.7.1
+</span></span></code></pre></div><ul><li>服務組成<ul><li><p>Deployment [kube-green-controller-manager]</p><ul><li>使用憑證 metrics-server-cert & webhook-server-cert</li><li>Service<ul><li>kube-green-controller-manager-metrics-service</li><li>kube-green-webhook-service</li></ul></li></ul></li><li><p>Certificate：webhooks require a valid certificate to expose the webhook server to the Kubernetes API server</p><ul><li>kube-green-metrics-certs</li><li>kube-green-serving-cert</li><li>Issuer [kube-green-selfsigned-issuer]</li></ul></li><li><p>ValidatingWebhookConfiguration：是 Kubernetes 中的「守門員」機制，是 Admission Controller 的一部分，在資源（例如 Pod, Deployment,SleepInfo）被寫入 etcd 之前，先將該資源發送給一個外部服務進行「審核」</p><ul><li>運作流程：攔截與審查</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>執行 kubectl apply 時，請求會經過以下階段：
+</span></span><span style=display:flex><span>✨ Authentication &amp; Authorization：確認是否有權限
+</span></span><span style=display:flex><span>✨ Mutating Admission：自動修改資源（例如自動注入 Sidecar）
+</span></span><span style=display:flex><span>✨ Object Validation：基本的語法檢查
+</span></span><span style=display:flex><span>✨ Validating Admission：API Server 看到有 ValidatingWebhookConfiguration，將資源內容傳送給指定的 Webhook 服務，Webhook 回覆： 「允許 (Allow)」或「拒絕 (Deny)」
+</span></span><span style=display:flex><span>✨ Persistence：存入 etcd
+</span></span></code></pre></div><ul><li>常見的實際應用場景:<ul><li>標籤強制檢查：規定所有 Pod 必須帶有特定標籤(env: prod)否則拒絕建立</li><li>安全性檢查：拒絕所有嘗試以 root 身分執行的容器</li><li>資源配額限制：檢查 Pod 是否設定了 limits 和 requests，沒寫就拒絕建立</li><li>映像檔來源檢查：只准許從公司內部的 gcr.io/my-company/ 下載 Image，禁止使用 Docker Hub</li></ul></li></ul></li></ul></li></ul><h3 id=crd-sleepinfo-設定><a class=link href=https://kube-green.dev/docs/configuration/ target=_blank rel=noopener>CRD SleepInfo 設定</a></h3><p>📌 kube-green 內建開關，會記得服務的原始的狀態，如果原本服務是手動關閉，喚醒時不會誤打開 [sleepAt 關 pod，wakeUpAt 開 pod]</p><ul><li>suspendCronJobs</li><li>suspendDeployments</li><li>suspendStatefulSets
+-> ⭐ 預設關閉這兩個資源類型的服務 deployment and statefulset</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>✨ To sleep the Deployment and StatefulSet resources, replicas are set to 0.
+</span></span><span style=display:flex><span>✨ To wake up, the number of replicas is set to the number of replicas before the sleep
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>✨ To sleep the CronJob resources, they are set as suspended.
+</span></span><span style=display:flex><span>✨ To wake up, the suspend field is restored
+</span></span></code></pre></div><p>📌 使用 patch 改寫： [布版當下關 pod，wakeUpAt 開 pod]
+📌 kind: SleepInfo 資源的 namespace 要跟要關閉的服務相同</p><p><a class=link href=https://kube-green.dev/docs/apireference_v1alpha1/ target=_blank rel=noopener>docs</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kube-green.com/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SleepInfo</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>weekdays</span>: <span style=color:#e6db74>&#34;*&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sleepAt</span>: <span style=color:#e6db74>&#34;20:00&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>wakeUpAt</span>: <span style=color:#e6db74>&#34;08:00&#34;</span> <span style=color:#ae81ff>⭐ Sleep without wake up 時可以省略</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>timeZone</span>: <span style=color:#e6db74>&#34;Asia/Taipei&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendCronJobs</span>: <span style=color:#66d9ef>true</span> <span style=color:#ae81ff>⭐ 是否關閉 CronJobs</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendDeployments</span>: <span style=color:#66d9ef>false</span> <span style=color:#ae81ff>⭐ 是否關閉 Deployments</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendStatefulSets</span>: <span style=color:#66d9ef>false</span> <span style=color:#ae81ff>⭐ 是否關閉 StatefulSets</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>excludeRef</span>:
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Exclude resources [設定多組測試正常]</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;batch/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>:       <span style=color:#ae81ff>CronJob</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>:       <span style=color:#ae81ff>do-not-suspend</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;apps/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>:       <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>:       <span style=color:#ae81ff>api-gateway</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Exclude with labels</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kube-green.dev/exclude</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>includeRef</span>:
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Include resources [⚠️ 設定一個以上條件不會作動]</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;apps/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>:       <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>:       <span style=color:#ae81ff>api-gateway</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Include with labels</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>matchLabels</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kube-green.dev/include</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Custom patches</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>patches</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>apps</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ReplicaSet</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        - path: /spec/replicas
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          op: add
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          value: 0</span>
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>batch</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>CronJob</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        - path: /spec/suspend
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          op: replace
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          value: true</span>
+</span></span></code></pre></div><h3 id=測試>測試</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># 布版當下關 pod，wakeUpAt 開 pod</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kube-green.com/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SleepInfo</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>weekdays</span>: <span style=color:#e6db74>&#34;*&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sleepAt</span>: <span style=color:#e6db74>&#34;17:42&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>wakeUpAt</span>: <span style=color:#e6db74>&#34;17:45&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>timeZone</span>: <span style=color:#e6db74>&#34;Asia/Taipei&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendCronJobs</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendDeployments</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendStatefulSets</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>includeRef</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;apps/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>: <span style=color:#ae81ff>api-hex</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>patches</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>apps</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        - path: /spec/replicas
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          op: add
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          value: 0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sleepAt 關 pod，wakeUpAt 開 pod</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kube-green.com/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SleepInfo</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>weekdays</span>: <span style=color:#e6db74>&#34;*&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sleepAt</span>: <span style=color:#e6db74>&#34;17:42&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>wakeUpAt</span>: <span style=color:#e6db74>&#34;17:45&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>timeZone</span>: <span style=color:#e6db74>&#34;Asia/Taipei&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendCronJobs</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendDeployments</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendStatefulSets</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>includeRef</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;apps/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>: <span style=color:#ae81ff>api-hex</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>patches</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>apps</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        - path: /spec/replicas
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          op: add
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          value: 0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sleepAt 關 pod，wakeUpAt 開 pod</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kube-green.com/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SleepInfo</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>weekdays</span>: <span style=color:#e6db74>&#34;*&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sleepAt</span>: <span style=color:#e6db74>&#34;17:42&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>wakeUpAt</span>: <span style=color:#e6db74>&#34;17:45&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>timeZone</span>: <span style=color:#e6db74>&#34;Asia/Taipei&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendCronJobs</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendDeployments</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendStatefulSets</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>includeRef</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>apiVersion</span>: <span style=color:#e6db74>&#34;apps/v1&#34;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>name</span>: <span style=color:#ae81ff>api-hex</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># sleepAt 調升 pod 數量，wakeUpAt 調回原本 pod 數量</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>kube-green.com/v1alpha1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SleepInfo</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>spec</span>:
+</span></span><span style=display:flex><span>  <span style=color:#f92672>weekdays</span>: <span style=color:#e6db74>&#34;*&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>sleepAt</span>: <span style=color:#e6db74>&#34;14:15&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>wakeUpAt</span>: <span style=color:#e6db74>&#34;14:18&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>timeZone</span>: <span style=color:#e6db74>&#34;Asia/Taipei&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendCronJobs</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendDeployments</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>suspendStatefulSets</span>: <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>patches</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>        <span style=color:#f92672>group</span>: <span style=color:#ae81ff>apps</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        - path: /spec/replicas
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          op: add
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          value: 3</span>
+</span></span></code></pre></div><h3 id=manual-management-of-certificates>Manual management of certificates</h3><p><a class=link href=https://kube-green.dev/docs/advanced/webhook-cert-management/#without-cert-manager target=_blank rel=noopener>Generate Self-Signed Certificates step by step</a></p><ul><li>openssl.conf</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>[ req ]
+</span></span><span style=display:flex><span>default_bits = 2048
+</span></span><span style=display:flex><span>prompt = no
+</span></span><span style=display:flex><span>default_md = sha256
+</span></span><span style=display:flex><span>req_extensions = req_ext
+</span></span><span style=display:flex><span>distinguished_name = dn
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[ dn ]
+</span></span><span style=display:flex><span>CN = kube-green-webhook-service.kube-green.svc.cluster.local
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[ req_ext ]
+</span></span><span style=display:flex><span>subjectAltName = @alt_names
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[ alt_names ]
+</span></span><span style=display:flex><span>DNS.1 = kube-green-webhook-service
+</span></span><span style=display:flex><span>DNS.2 = kube-green-webhook-service.kube-green
+</span></span><span style=display:flex><span>DNS.3 = kube-green-webhook-service.kube-green.svc
+</span></span><span style=display:flex><span>DNS.4 = kube-green-webhook-service.kube-green.svc.cluster.local
+</span></span></code></pre></div><ul><li>And then run the following commands:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span># Generate CA private key
+</span></span><span style=display:flex><span>openssl genpkey -algorithm RSA -out ca.key
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Generate CA certificate for 100 years
+</span></span><span style=display:flex><span>openssl req -new -nodes -x509 -key ca.key -out ca.crt -days 36500 -subj &#34;/CN=The CA&#34;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Generate private key
+</span></span><span style=display:flex><span>openssl genpkey -algorithm RSA -out tls.key
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Generate certificate signing request
+</span></span><span style=display:flex><span>openssl req -new -key tls.key -out tls.csr -config openssl.conf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Generate certificate signed with the CA
+</span></span><span style=display:flex><span>openssl x509 -req -in tls.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out tls.crt -days 365 -extfile openssl.conf -extensions req_ext
+</span></span></code></pre></div><ul><li>After creating the certificates, you can create the secret with the following command:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>kubectl create secret tls webhook-server-cert --cert=./tls.crt --key=./tls.key
+</span></span></code></pre></div><p>Once generated, you can create the kube-green manifests (commenting out the [CERT-MANAGER] part), create the base64 of the ca.crt file and patch the webhook configuration with the new caBundle.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>cat ca.crt | base64
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>webhooks</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>vsleepinfo.kb.io</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>clientConfig</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>caBundle</span>: <span style=color:#ae81ff>&lt;CA_BUNDLE&gt;</span>
+</span></span></code></pre></div><p><a class=link href=https://helmfile.readthedocs.io/en/latest/advanced-features/ target=_blank rel=noopener>helmfile-advanced-features</a>
+-> 調整 chart</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>releases</span>:
+</span></span><span style=display:flex><span>  - <span style=color:#f92672>&lt;&lt;</span>: <span style=color:#75715e>*kube-green</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>kube-green</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>strategicMergePatches</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>admissionregistration.k8s.io/v1</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ValidatingWebhookConfiguration</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>kube-green-validating-webhook-configuration</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>webhooks</span>:
+</span></span><span style=display:flex><span>          - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>vsleepinfo.kb.io</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>clientConfig</span>:
+</span></span><span style=display:flex><span>              <span style=color:#f92672>caBundle</span>: <span style=color:#ae81ff>&lt;CA_BUNDLE&gt;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#75715e># 跟 strategicMergePatches 相等寫法</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## jsonPatches</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>jsonPatches</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>group</span>: <span style=color:#ae81ff>admissionregistration.k8s.io</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>version</span>: <span style=color:#ae81ff>v1</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ValidatingWebhookConfiguration</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>kube-green-validating-webhook-configuration</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>patch</span>:
+</span></span><span style=display:flex><span>          - <span style=color:#f92672>op</span>: <span style=color:#ae81ff>replace</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/webhooks/0/clientConfig/caBundle</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>value</span>: <span style=color:#ae81ff>&lt;CA_BUNDLE&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## transformers</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>transformers</span>:
+</span></span><span style=display:flex><span>      - <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>builtin</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>PatchTransformer</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>metadata</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>patch-ca-bundle</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>patch</span>: |-<span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          - op: replace
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            path: /webhooks/0/clientConfig/caBundle
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            value: &lt;CA_BUNDLE&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>target</span>:
+</span></span><span style=display:flex><span>          <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ValidatingWebhookConfiguration</span>
+</span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>kube-green-validating-webhook-configuration</span>
+</span></span></code></pre></div><h2 id=descheduler><a class=link href=https://github.com/kubernetes-sigs/descheduler target=_blank rel=noopener>descheduler</a></h2></section><footer class=article-footer><section class=article-tags><a href=/tags/cost/>Cost</a></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/blog/gcp/custom-compute-class/><div class=article-details><h2 class=article-title>Custom Compute Class</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2025 -
+2026 Sandra Chen Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

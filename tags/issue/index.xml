@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Issue on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/issue/</link><description>Recent content in Issue on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 30 Oct 2025 10:54:57 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/issue/index.xml" rel="self" type="application/rss+xml"/><item><title>Terraform issue</title><link>https://sandra-chen-24.github.io/blog/terraform/issue/</link><pubDate>Thu, 30 Oct 2025 10:54:57 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/terraform/issue/</guid><description>&lt;h2 id="google-terraform-provider-bug"&gt;google terraform provider bug
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;使用 terraform 設定 kubelet_config 區塊，預設會把 cpuCfsQuota 設定為 false，跟 GCP API 相反，GCP API 預設設定為 true
+-&amp;gt; This issue is fixed in the &amp;ldquo;7.6.0&amp;rdquo; terraform google provider version
+&lt;a class="link" href="https://github.com/hashicorp/terraform-provider-google/releases/tag/v7.6.0" target="_blank" rel="noopener"
+ &gt;v7.6.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;terragrunt plan -no-color &amp;gt; plan.out&lt;/p&gt;</description></item></channel></rss>

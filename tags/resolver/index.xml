@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Resolver on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/resolver/</link><description>Recent content in Resolver on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Tue, 10 Feb 2026 16:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/resolver/index.xml" rel="self" type="application/rss+xml"/><item><title>resolver</title><link>https://sandra-chen-24.github.io/blog/k8s/internal-dns/</link><pubDate>Tue, 10 Feb 2026 16:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/k8s/internal-dns/</guid><description>&lt;h2 id="resolver-使用"&gt;resolver 使用
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;resolver 8.8.8.8 (Google 的公共 DNS):Google 的 DNS 伺服器並不知道內部網路的解析紀錄，因此會回傳 Host not found&lt;/li&gt;
+&lt;li&gt;resolver kube-dns.kube-system [Kube DNS (CoreDNS)]:它是 K8s 集群內的『導航系統』，能即時追蹤所有 Service 的建立與刪除&lt;/li&gt;
+&lt;li&gt;Local DNS (主機或節點 DNS):指 K8s 節點本身的 DNS 或外部網路的 DNS。只知道公網（如 Google、FB）或公司實體內網的網址。它無法解析 K8s 內部的 Service Name&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

@@ -1,0 +1,224 @@
+<!doctype html><html lang=zh-tw dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="OpenTelemetry Collector apps 用途說明 collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace) otel-agent (daemonset): 負責採集節點上面的 log & metric (採集服務資訊) otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送) otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag]) Otelcol Gateway & Agent Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck Otelcol Agent：每個 gcp 專案會建立一個，收集專案中服務的 otel 資料傳送至 Otelcol Gateway 想使用 otel 的服務，需要調整程式，然後加上 env: extraEnvs: - name: OTEL_SERVICE_NAME value: odin - name: OTEL_RESOURCE_ATTRIBUTES value: >- env=dev, dept=pdbm, product=bbin - name: OTEL_EXPORTER_OTLP_PROTOCOL value: grpc - name: OTEL_EXPORTER_OTLP_ENDPOINT value: http://collector.opentelemetry:4317 Otelcol 配置 參考 chart\n"><title>可觀測性</title><link rel=canonical href=https://sandra-chen-24.github.io/blog/otel/otel-collector/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.390cc81d180d80110703ea467e355a4f3a0f44f25d4e957842790824fb5f2ef2.css><meta property='og:title' content="可觀測性"><meta property='og:description' content="OpenTelemetry Collector apps 用途說明 collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace) otel-agent (daemonset): 負責採集節點上面的 log & metric (採集服務資訊) otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送) otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag]) Otelcol Gateway & Agent Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck Otelcol Agent：每個 gcp 專案會建立一個，收集專案中服務的 otel 資料傳送至 Otelcol Gateway 想使用 otel 的服務，需要調整程式，然後加上 env: extraEnvs: - name: OTEL_SERVICE_NAME value: odin - name: OTEL_RESOURCE_ATTRIBUTES value: >- env=dev, dept=pdbm, product=bbin - name: OTEL_EXPORTER_OTLP_PROTOCOL value: grpc - name: OTEL_EXPORTER_OTLP_ENDPOINT value: http://collector.opentelemetry:4317 Otelcol 配置 參考 chart\n"><meta property='og:url' content='https://sandra-chen-24.github.io/blog/otel/otel-collector/'><meta property='og:site_name' content='Sandra Chen Blog'><meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='observability'><meta property='article:published_time' content='2025-09-10T13:30:00+08:00'><meta property='article:modified_time' content='2025-09-10T13:30:00+08:00'><meta name=twitter:title content="可觀測性"><meta name=twitter:description content="OpenTelemetry Collector apps 用途說明 collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace) otel-agent (daemonset): 負責採集節點上面的 log & metric (採集服務資訊) otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送) otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag]) Otelcol Gateway & Agent Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck Otelcol Agent：每個 gcp 專案會建立一個，收集專案中服務的 otel 資料傳送至 Otelcol Gateway 想使用 otel 的服務，需要調整程式，然後加上 env: extraEnvs: - name: OTEL_SERVICE_NAME value: odin - name: OTEL_RESOURCE_ATTRIBUTES value: >- env=dev, dept=pdbm, product=bbin - name: OTEL_EXPORTER_OTLP_PROTOCOL value: grpc - name: OTEL_EXPORTER_OTLP_ENDPOINT value: http://collector.opentelemetry:4317 Otelcol 配置 參考 chart\n"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Sandra Chen Blog</a></h1><h2 class=site-description>Notes & Writings</h2></div></header><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/_index.zh-cn/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/page/about/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>About</span></a></li><li><a href=/page/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/page/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/page/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/otel/ style=background-color:#ebbeef;color:#390f3d>Otel</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/blog/otel/otel-collector/>可觀測性</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2025-09-10T13:30:00+08:00>Wednesday, September 10, 2025</time></div></footer></div></header><section class=article-content><h2 id=opentelemetry-collector>OpenTelemetry Collector</h2><h3 id=apps-用途說明>apps 用途說明</h3><ul><li>collector (deployment): 接收 OpenTelemetry SDK 所送出的資料 (需要在程式使用 otel libery，傳送 log、metric、trace，目前規劃主要針對 trace)</li><li>otel-agent (daemonset): 負責採集節點上面的 log & metric (採集服務資訊)</li><li>otel-cluster-agent (deployment): 負責採集叢集 metric (只需要一顆，採集系統資訊，用 daemonset 可能重複送)</li><li>otel-gateway (deployment): 匯總叢集內的 otel-agent 與 otel-cluster-agent 資料並送到儲存後端 (評估可有可無，若有統一處理的動作才有效益 [e.g. 統一加 tag])</li></ul><h4 id=otelcol-gateway--agent>Otelcol Gateway & Agent</h4><ul><li>Otelcol Gateway：收集所有專案的 otel 資料傳送至 eck</li><li>Otelcol Agent：每個 gcp 專案會建立一個，收集專案中服務的 otel 資料傳送至 Otelcol Gateway</li><li>想使用 otel 的服務，需要調整程式，然後加上 env:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>extraEnvs:
+</span></span><span style=display:flex><span>  - name: OTEL_SERVICE_NAME
+</span></span><span style=display:flex><span>    value: odin
+</span></span><span style=display:flex><span>  - name: OTEL_RESOURCE_ATTRIBUTES
+</span></span><span style=display:flex><span>    value: &gt;-
+</span></span><span style=display:flex><span>      env=dev,
+</span></span><span style=display:flex><span>      dept=pdbm,
+</span></span><span style=display:flex><span>      product=bbin
+</span></span><span style=display:flex><span>  - name: OTEL_EXPORTER_OTLP_PROTOCOL
+</span></span><span style=display:flex><span>    value: grpc
+</span></span><span style=display:flex><span>  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+</span></span><span style=display:flex><span>    value: http://collector.opentelemetry:4317
+</span></span></code></pre></div><h4 id=otelcol-配置>Otelcol 配置</h4><p><a class=link href=https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-collector/values.yaml target=_blank rel=noopener>參考 chart</a></p><p><a class=link href=https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator target=_blank rel=noopener>receiver - receivercreator</a></p><p><a class=link href=https://github.com/elastic/elastic-agent/blob/main/deploy/helm/edot-collector/kube-stack/values.yaml target=_blank rel=noopener>receivercreator - example</a></p><p><a class=link href=https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/observer/k8sobserver target=_blank rel=noopener>extension - k8s_observer</a></p><p><a class=link href=https://opentelemetry.io/docs/platforms/kubernetes/collector/components/ target=_blank rel=noopener>Important Components for Kubernetes</a></p><ul><li><p>chart 設置注意</p><ul><li><p>因為有使用 datadog agent 會衝到 port，要記得調整設定</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>config:
+</span></span><span style=display:flex><span>  receivers:
+</span></span><span style=display:flex><span>    otlp: null
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ports:
+</span></span><span style=display:flex><span>  otlp: { enabled: false }
+</span></span><span style=display:flex><span>  otlp-http: { enabled: false }
+</span></span></code></pre></div></li><li><p>collector-agent、collector-cluster-agent 要加 presets 區塊設定</p></li><li><p>pipeline 設置可以先 plan 看 config 中有哪些 receivers、processors、exporters、extensions、connectors，再調整，不需要的也可以蓋掉</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>receivers:
+</span></span><span style=display:flex><span>  jaeger: null
+</span></span><span style=display:flex><span>  zipkin: null
+</span></span></code></pre></div></li><li><p>README.md 中資訊</p><ul><li>Status<ul><li>Stability -> 看屬於哪個類型使用 [log, traces, traces]</li><li>Distributions -> 判斷是否已啟用</li></ul></li></ul></li></ul></li><li><p>collector = receivers + processors + exporters</p><ul><li>receivers: 從外部系統收資料（metrics / logs / traces）</li><li>processors: 在 pipeline 中對資料做處理（e.g. 篩選、轉換、打標籤、聚合）</li><li>exporters: 把資料送到外部目的地（e.g. Datadog、OTLP、S3）</li></ul></li><li><p>extensions：擴充 collector 的功能</p></li><li><p>connectors：擴充 pipeline 的功能 [中繼處理或橋接的元件]</p><ul><li><p>datadog/connector: 把資料轉給 Datadog。</p></li><li><p>forward/datadog: 單純做轉發</p></li><li><p>內部 exporter + receiver</p><ul><li>讓資料從一個 pipeline 流向另一個 pipeline</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>pipelines:
+</span></span><span style=display:flex><span>  # Logs pipelines -&gt; 服務透過 otel 傳送到 collector，collector 再傳到 datadog
+</span></span><span style=display:flex><span>  logs:
+</span></span><span style=display:flex><span>    receivers: [otlp]
+</span></span><span style=display:flex><span>    processors: [memory_limiter, k8sattributes, resource, batch]
+</span></span><span style=display:flex><span>    exporters: [forward/datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  logs/datadog:
+</span></span><span style=display:flex><span>    receivers: [forward/datadog]
+</span></span><span style=display:flex><span>    processors: [memory_limiter, batch/datadog]
+</span></span><span style=display:flex><span>    exporters: [datadog]
+</span></span></code></pre></div><ul><li>做 failover / forward</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>pipelines:
+</span></span><span style=display:flex><span>  traces:
+</span></span><span style=display:flex><span>    receivers: [otlp]
+</span></span><span style=display:flex><span>    processors: [memory_limiter, k8sattributes, resource, batch]
+</span></span><span style=display:flex><span>    exporters: [failover/traces, datadog/connector]
+</span></span><span style=display:flex><span>  traces/nop:
+</span></span><span style=display:flex><span>    receivers: [failover/traces]
+</span></span><span style=display:flex><span>    exporters: [nop]
+</span></span></code></pre></div></li></ul></li><li><p>${env:MY_POD_IP} -> otelcol 底層有處理，才能這樣設定取 env 的值</p></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span># exporters、processors、receivers [定義]
+</span></span><span style=display:flex><span>## helmfile/common/otel-collector -&gt; Otelcol Agent
+</span></span><span style=display:flex><span>## helmfile/pd/observability/apps/otel-collector -&gt; Otelcol Gateway
+</span></span><span style=display:flex><span>config:
+</span></span><span style=display:flex><span>  exporters:
+</span></span><span style=display:flex><span>    datadog:
+</span></span><span style=display:flex><span>      api:
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>      metrics:
+</span></span><span style=display:flex><span>        resource_attributes_as_tags: true
+</span></span><span style=display:flex><span>    otlp/elastic-apm: --&gt; eck 服務
+</span></span><span style=display:flex><span>      balancer_name: round_robin
+</span></span><span style=display:flex><span>      endpoint: dns:///eck-apm-server-apm-http:8200
+</span></span><span style=display:flex><span>      ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  extensions:
+</span></span><span style=display:flex><span>    health_check:
+</span></span><span style=display:flex><span>      endpoint: ${env:MY_POD_IP}:13133
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  processors: -&gt; 效能優化及資料處理
+</span></span><span style=display:flex><span>    batch: {}
+</span></span><span style=display:flex><span>    batch/datadog:
+</span></span><span style=display:flex><span>      # See https://docs.datadoghq.com/opentelemetry/setup/collector_exporter/#batch-processor-configuration
+</span></span><span style=display:flex><span>      send_batch_max_size: 100
+</span></span><span style=display:flex><span>      send_batch_size: 10
+</span></span><span style=display:flex><span>      timeout: 10s
+</span></span><span style=display:flex><span>    memory_limiter:
+</span></span><span style=display:flex><span>      check_interval: 5s
+</span></span><span style=display:flex><span>      limit_percentage: 80
+</span></span><span style=display:flex><span>      spike_limit_percentage: 25
+</span></span><span style=display:flex><span>    k8sattributes: {} -&gt; 可以設定使用 k8s 上的 tag
+</span></span><span style=display:flex><span>    resource: {}
+</span></span><span style=display:flex><span>    transform/elastic-apm:
+</span></span><span style=display:flex><span>      error_mode: ignore
+</span></span><span style=display:flex><span>      log_statements: &amp;statements
+</span></span><span style=display:flex><span>        - conditions:
+</span></span><span style=display:flex><span>            - resource.attributes[&#34;product&#34;] != nil and resource.attributes[&#34;env&#34;] != nil
+</span></span><span style=display:flex><span>          statements:
+</span></span><span style=display:flex><span>            - set(resource.attributes[&#34;deployment.environment.name&#34;], Concat([resource.attributes[&#34;product&#34;], resource.attributes[&#34;env&#34;]], &#34; &#34;))
+</span></span><span style=display:flex><span>        ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  receivers:
+</span></span><span style=display:flex><span>    otlp:
+</span></span><span style=display:flex><span>      protocols:
+</span></span><span style=display:flex><span>        grpc:
+</span></span><span style=display:flex><span>          endpoint: ${env:MY_POD_IP}:4317
+</span></span><span style=display:flex><span>          ...
+</span></span><span style=display:flex><span>        http:
+</span></span><span style=display:flex><span>          endpoint: ${env:MY_POD_IP}:4318
+</span></span><span style=display:flex><span>          ...
+</span></span><span style=display:flex><span>    otelarrow: -&gt; gateway 使用，會壓縮
+</span></span><span style=display:flex><span>      protocols:
+</span></span><span style=display:flex><span>        grpc:
+</span></span><span style=display:flex><span>          endpoint: ${env:MY_POD_IP}:4319
+</span></span><span style=display:flex><span>          ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    prometheus:
+</span></span><span style=display:flex><span>      ...
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span># pipeline [使用]
+</span></span><span style=display:flex><span># common/otel-collector -&gt; Otelcol Agent
+</span></span><span style=display:flex><span>  ...
+</span></span><span style=display:flex><span>    extensions: [zpages, health_check] -&gt; zpages 可以看 collector 設定
+</span></span><span style=display:flex><span>    pipelines:
+</span></span><span style=display:flex><span>      # Logs pipelines -&gt; 服務透過 otel 傳送到 collector，collector 再傳到 datadog
+</span></span><span style=display:flex><span>      logs:
+</span></span><span style=display:flex><span>        receivers: [otlp]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, k8sattributes, resource, batch]
+</span></span><span style=display:flex><span>        exporters: [forward/datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      # Metrics pipelines -&gt; 服務透過 otel / prometheus 傳送到 collector，collector 再傳到 datadog
+</span></span><span style=display:flex><span>      metrics:
+</span></span><span style=display:flex><span>        receivers: [otlp, prometheus]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, k8sattributes, resource, batch]
+</span></span><span style=display:flex><span>        exporters: [forward/datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      # Traces pipelines
+</span></span><span style=display:flex><span>      traces:
+</span></span><span style=display:flex><span>        receivers: [otlp]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, k8sattributes, resource, batch]
+</span></span><span style=display:flex><span>        exporters: [failover/traces, datadog/connector]
+</span></span><span style=display:flex><span>      traces/main:
+</span></span><span style=display:flex><span>        receivers: [failover/traces]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, filter/traces, probabilistic_sampler, batch]
+</span></span><span style=display:flex><span>        exporters: [otelarrow/gateway]
+</span></span><span style=display:flex><span>      traces/nop:
+</span></span><span style=display:flex><span>        receivers: [failover/traces]
+</span></span><span style=display:flex><span>        exporters: [nop] -&gt; failover 把資料丟掉，防止累積大量資料把 collector 用爆
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      # Datadog pipelines
+</span></span><span style=display:flex><span>      logs/datadog:
+</span></span><span style=display:flex><span>        receivers: [forward/datadog]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, batch/datadog]
+</span></span><span style=display:flex><span>        exporters: [datadog]
+</span></span><span style=display:flex><span>      metrics/datadog:
+</span></span><span style=display:flex><span>        receivers: [forward/datadog, datadog/connector]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, batch/datadog]
+</span></span><span style=display:flex><span>        exporters: [datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># helmfile/pd/observability/apps/otel-collector -&gt; Otelcol Gateway
+</span></span><span style=display:flex><span>service:
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>    extensions: [health_check]
+</span></span><span style=display:flex><span>    pipelines:
+</span></span><span style=display:flex><span>      # Telemetry pipelines
+</span></span><span style=display:flex><span>      metrics/telemetry:
+</span></span><span style=display:flex><span>        receivers: [prometheus]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, k8sattributes, resource]
+</span></span><span style=display:flex><span>        exporters: [forward/datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      # Datadog pipelines
+</span></span><span style=display:flex><span>      metrics/datadog:
+</span></span><span style=display:flex><span>        receivers: [forward/datadog]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, batch/datadog]
+</span></span><span style=display:flex><span>        exporters: [datadog]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      # Gateway pipelines -&gt; 服務透過 otel / otelarrow 傳送到 collector，collector 再傳到 eck
+</span></span><span style=display:flex><span>      logs:
+</span></span><span style=display:flex><span>        receivers: [otlp, otelarrow]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, transform/elastic-apm, batch]
+</span></span><span style=display:flex><span>        exporters: [otlp/elastic-apm]
+</span></span><span style=display:flex><span>      metrics:
+</span></span><span style=display:flex><span>        receivers: [otlp, otelarrow]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, transform/elastic-apm, batch]
+</span></span><span style=display:flex><span>        exporters: [otlp/elastic-apm]
+</span></span><span style=display:flex><span>      traces:
+</span></span><span style=display:flex><span>        receivers: [otlp, otelarrow]
+</span></span><span style=display:flex><span>        processors: [memory_limiter, transform/elastic-apm, batch]
+</span></span><span style=display:flex><span>        exporters: [otlp/elastic-apm]
+</span></span></code></pre></div><h4 id=collector-agent-vs-collector-cluster-agent>collector-agent vs collector-cluster-agent</h4><h5 id=metric-相關>metric 相關</h5><ul><li><p>scope:判斷 metric 是從哪個套件來的</p></li><li><p>collector-agent</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>(37) 服務指標
+</span></span><span style=display:flex><span>  - (13) k8s.pod.*
+</span></span><span style=display:flex><span>  - (13) k8s.node.*
+</span></span><span style=display:flex><span>  - (11) container.*
+</span></span></code></pre></div></li><li><p>collector-cluster-agent</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>(33) 服務指標
+</span></span><span style=display:flex><span>  - (4) k8s.statefulset.*
+</span></span><span style=display:flex><span>  - k8s.resource_quota.used
+</span></span><span style=display:flex><span>  - k8s.resource_quota.hard_limit
+</span></span><span style=display:flex><span>  - (2) k8s.replicaset.*
+</span></span><span style=display:flex><span>  - k8s.pod.phase
+</span></span><span style=display:flex><span>  - k8s.node.condition_ready
+</span></span><span style=display:flex><span>  - k8s.namespace.phase
+</span></span><span style=display:flex><span>  - (5) k8s.job.*
+</span></span><span style=display:flex><span>  - (4) k8s.hpa.*
+</span></span><span style=display:flex><span>  - (2) k8s.deployment.*
+</span></span><span style=display:flex><span>  - (4) k8s.daemonset.*
+</span></span><span style=display:flex><span>  - k8s.cronjob.active_jobs
+</span></span><span style=display:flex><span>  - (6) k8s.container.*
+</span></span></code></pre></div></li></ul><h5 id=log-相關>log 相關</h5><ul><li>collector-agent: 服務訪問 log</li><li>collector-cluster-agent: event 相關 log (e.g. 服務被建立、job 執行)</li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/observability/>Observability</a></section></footer></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2025 -
+2026 Sandra Chen Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

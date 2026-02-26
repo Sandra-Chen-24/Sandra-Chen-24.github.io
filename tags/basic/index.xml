@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Basic on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/basic/</link><description>Recent content in Basic on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Thu, 06 Nov 2025 13:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/basic/index.xml" rel="self" type="application/rss+xml"/><item><title>kafka</title><link>https://sandra-chen-24.github.io/blog/kafka/kafka/</link><pubDate>Thu, 06 Nov 2025 13:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kafka/kafka/</guid><description>&lt;p&gt;&lt;a class="link" href="https://watermill.io/pubsubs/kafka/" target="_blank" rel="noopener"
+ &gt;watermill&lt;/a&gt;
+&lt;a class="link" href="https://github.com/cyg-pd/go-watermillx" target="_blank" rel="noopener"
+ &gt;watermill pd 範例&lt;/a&gt;&lt;/p&gt;</description></item><item><title>gateway api vs api gateway</title><link>https://sandra-chen-24.github.io/blog/gateway/basic/</link><pubDate>Fri, 31 Oct 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gateway/basic/</guid><description>&lt;h2 id="api-gateway"&gt;API Gateway
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;作為所有 API 請求的入口（entry point）&lt;/li&gt;
+&lt;li&gt;提供：
+&lt;ul&gt;
+&lt;li&gt;Routing（依路徑導向不同服務）&lt;/li&gt;
+&lt;li&gt;Authentication / Authorization&lt;/li&gt;
+&lt;li&gt;Rate limiting&lt;/li&gt;
+&lt;li&gt;Caching&lt;/li&gt;
+&lt;li&gt;Logging / Metrics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;常見實作：
+&lt;ul&gt;
+&lt;li&gt;AWS API Gateway&lt;/li&gt;
+&lt;li&gt;Kong&lt;/li&gt;
+&lt;li&gt;NGINX Gateway&lt;/li&gt;
+&lt;li&gt;Istio Gateway（在 Service Mesh 架構中）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="gateway-api"&gt;Gateway API
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://gateway-api.sigs.k8s.io/" target="_blank" rel="noopener"
+ &gt;官方文件&lt;/a&gt;
+&lt;a class="link" href="https://cloud.google.com/kubernetes-engine/docs/how-to/standalone-neg?hl=zh-tw#uses_with" target="_blank" rel="noopener"
+ &gt;neg&lt;/a&gt;
+&lt;a class="link" href="https://hackmd.io/@QI-AN/Understanding-and-Implementing-the-Kubernetes-Gateway-API" target="_blank" rel="noopener"
+ &gt;t&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes 官方的新一代網路 API 標準，用來取代早期的 Ingress，是一組 Kubernetes CRD（Custom Resource Definition）&lt;/li&gt;
+&lt;li&gt;主要資源：[GatewayClass -&amp;gt; Gateway -&amp;gt; HTTPRoute -&amp;gt; Service 或 GatewayClass -&amp;gt; Gateway -&amp;gt; TLSRoute -&amp;gt; Service]
+&lt;ul&gt;
+&lt;li&gt;GatewayClass&lt;/li&gt;
+&lt;li&gt;Gateway -&amp;gt; 入口 IP&lt;/li&gt;
+&lt;li&gt;HTTPRoute&lt;/li&gt;
+&lt;li&gt;TCPRoute ?&lt;/li&gt;
+&lt;li&gt;UDPRoute ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;讓不同廠商（例如 Istio、NGINX、Traefik、HAProxy、Linkerd）可以共用同一套 Gateway 規範，達成：
+&lt;ul&gt;
+&lt;li&gt;統一配置方式&lt;/li&gt;
+&lt;li&gt;支援更細緻的路由規則&lt;/li&gt;
+&lt;li&gt;支援多租戶、多 namespace 管理&lt;/li&gt;
+&lt;li&gt;清楚分層：Infra team 管 Gateway，App team 管 Route&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="測試未正式生效的域名"&gt;測試未正式生效的域名
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --resolve &amp;lt;hostname&amp;gt;:&amp;lt;port&amp;gt;:&amp;lt;ip&amp;gt; &amp;lt;url&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;❯ curl --resolve hall.vir888.com:443:35.201.227.203 https://hall.vir888.com
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --resolve hall.epbyofzj.com:443:34.160.139.10 https://hall.epbyofzj.com/kevintest -H &amp;#39;referer: https://hall.dctest999.com&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;不能在 Gateway 處理是因為 HTTPRoute rules 的 matches 只能有 16 個&lt;/p&gt;</description></item><item><title>curl 的歷程</title><link>https://sandra-chen-24.github.io/blog/common/curl/</link><pubDate>Fri, 19 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/common/curl/</guid><description>&lt;h2 id="使用-http-跟-https-差別"&gt;使用 HTTP 跟 HTTPS 差別
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;geo.conf&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;  geo $allowed_ip_geo {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    default 0;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    34.1.1.1 @aaa;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    130.1.1.1 @bbb;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;  map $allowed_ip_geo$host $valid_request {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    default 0;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    &amp;#34;@bbbhall.bbb999.com&amp;#34; 1;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;    &amp;#34;@aaahall.aaa888.com&amp;#34; 1;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;  }&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# hall.aaa888.com 有解析，hall.bbb999.com 沒有解析
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;⭐ ## 有解析的 host 使用 https 跟 http 差別
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[hall.aaa888.com 應該使用 34.1.1.1 入口，想模擬使用 130.1.1.1 被阻擋]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl http://130.1.1.1 -H &amp;#39;host: hall.aaa888.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; Location: https://hall.aaa888.com:443/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Issue another request to this URL: &amp;#39;https://hall.aaa888.com:443/&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Connection #1 to host hall.aaa888.com left intact
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### https
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://130.1.1.1 -H &amp;#39;host: hall.aaa888.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Connection #0 to host 130.1.1.1 left intact
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;📌 -&amp;gt; http 會遇到 301 然後用 host 的網址是解析轉導，因為有設定 80 強轉 443
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;⭐ ## 沒解析的 host 使用 https 跟 http 差別
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;🔍🔍🔍 設定正確 IP，跟有解析情境同
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[本地設定：130.1.1.1 hall.bbb999.com]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl http://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; Location: https://hall.bbb999.com:443/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Issue another request to this URL: &amp;#39;https://hall.bbb999.com:443/&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 200 OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Connection #1 to host hall.bbb999.com left intact
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### https
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Connection #0 to host 34.1.1.1 left intact
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;🔍🔍🔍 設定錯誤確 IP
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[本地設定：34.1.1.1 hall.bbb999.com]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### http
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl http://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 301 Moved Permanently
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; Location: https://hall.bbb999.com:443/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Issue another request to this URL: &amp;#39;https://hall.bbb999.com:443/&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;💡 ### https
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://34.1.1.1 -H &amp;#39;host: hall.bbb999.com&amp;#39; -vvv -kL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt; HTTP/1.1 403 Forbidden
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;* Connection #0 to host 34.1.1.1 left intact
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-&amp;gt; 等同於 curl https://hall.bbb999.com -k
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>kube-dns</title><link>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</link><pubDate>Wed, 17 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/kube-dns/kube-dns/</guid><description>&lt;h2 id="nodelocaldns"&gt;NodeLocalDNS
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;dnsmasq_hits_count 跟 dnsmasq_misses_count 主要用來反映快取效益，命中就不需要往上游 CoreDNS/KubeDNS 或外部 DNS 查&lt;/li&gt;
+&lt;li&gt;dnsmasq_hits_count / (dnsmasq_hits_count + dnsmasq_misses_count) * 100
+-&amp;gt; 如果命中率 &amp;gt; 80%，代表大部分的查詢都被快取解決&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="kube-dns-autoscaler-的設定"&gt;kube-dns-autoscaler 的設定
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;apiVersion&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;kind&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ConfigMap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;kube-dns-autoscaler&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;namespace&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;kube-system&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;linear&lt;/span&gt;: |-&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;coresPerReplica&amp;#34;: 256,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;nodesPerReplica&amp;#34;: 16,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;min&amp;#34;: 2,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;max&amp;#34;: 20
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; }&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;🔹 coresPerReplica&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;每多少個 CPU Core 需要新增一個 CoreDNS 副本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;🔹 nodesPerReplica&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;每多少個 Node 需要新增一個副本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;👉 autoscaler 會取兩者中 需要副本數較多的那個值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;🔹 min&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;kube-dns/CoreDNS 最少副本數 (避免過小集群無法容錯)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;🔹 max&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;kube-dns/CoreDNS 最大副本數 (避免太多 pod 浪費資源)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;📌 實際例子&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;假設你的 cluster 有：&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;640&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;cores / 80 nodes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;計算：&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;coresPerReplica = 256 → 640 / 256 = 3 副本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;nodesPerReplica = 16 → 80 / 16 = 5 副本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;👉 autoscaler 選取 5 副本 (因為要滿足兩個條件中較大的需求)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>還沒想到分類</title><link>https://sandra-chen-24.github.io/blog/common/map/</link><pubDate>Tue, 16 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/common/map/</guid><description>&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# $http_referer 去匹配正則規則 &amp;#34;~^https://(?&amp;lt;domain&amp;gt;[^/]+)&amp;#34;，取出 https:// 後面第一段不含 / 的字串存進 $domain
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;map $http_referer $effective_host {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; default $host;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;~^https://(?&amp;lt;domain&amp;gt;[^/]+)&amp;#34; $domain;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>機器類型</title><link>https://sandra-chen-24.github.io/blog/aws/instance/</link><pubDate>Tue, 09 Sep 2025 15:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/aws/instance/</guid><description>&lt;p&gt;&lt;a class="link" href="https://instances.vantage.sh/" target="_blank" rel="noopener"
+ &gt;機器類型及費用&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="機器類型"&gt;機器類型
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;n:AMD (x86_64)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;g:AWS Graviton (arm64)：image 需要支援 arm 且調整設定
+-&amp;gt; ami_type：要使用 AL2023_ARM_64_STANDARD，預設是 AL2023_x86_64_STANDARD&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gitlab-runners-arm = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; instance_types = [&amp;#34;m6g.medium&amp;#34;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; min_size = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_size = 2
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; desired_size = 1
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; capacity_type = &amp;#34;SPOT&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ami_type = &amp;#34;AL2023_ARM_64_STANDARD&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; labels = {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;service&amp;#34; = &amp;#34;gitlab-runner-arm&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;-&amp;gt; gitlab-runner 需要多帶 helper_image = &amp;ldquo;gitlab/gitlab-runner-helper:arm64-latest&amp;rdquo;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;config: |
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [[runners]]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; [runners.kubernetes]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; namespace = &amp;#34;gitlab&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; image = &amp;#34;ubuntu:20.04&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; helper_image = &amp;#34;gitlab/gitlab-runner-helper:arm64-latest&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; privileged = true
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;-&amp;gt; CICD 裡面，如果在 build 時，有用到以下指令來安裝 kubectl，需要確認是否是改為 arm64&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -LO &amp;#34;https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl&amp;#34; &amp;amp;&amp;amp; chmod +x ./kubectl &amp;amp;&amp;amp; mv ./kubectl /usr/local/bin/kubectl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;其他 ：Intel (x86_64)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
