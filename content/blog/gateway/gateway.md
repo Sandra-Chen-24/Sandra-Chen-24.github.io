@@ -37,3 +37,5 @@ categories = ["gcp"]
   - gke-l7-gxlb:經典全域外部，舊版架構（Classic），除非有特殊相容性需求，否則優先選上面的 Managed 版本
   - gke-l7-regional-external-managed：區域外部，僅服務特定地區（如台灣），需要符合資料在地化法規
   - gke-l7-rilb:內部 (Internal)，VPC 內部、叢集內部服務互通
+
+[部署閘道](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways?hl=zh-tw)
