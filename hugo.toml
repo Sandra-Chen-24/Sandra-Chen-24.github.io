@@ -17,12 +17,6 @@ theme = "hugo-theme-stack"
   [params.footer]
     since = 2025
 
-  # OpenGraph (社群分享預覽)
-  [params.opengraph]
-    [params.opengraph.twitter]
-      site = "@SandraChen"
-      card = "summary_large_image"
-
 [menu]
   [[menu.main]]
     identifier = "home"
