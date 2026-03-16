@@ -39,3 +39,4 @@ categories = ["gcp"]
   - gke-l7-rilb:內部 (Internal)，VPC 內部、叢集內部服務互通
 
 [部署閘道](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways?hl=zh-tw)
+[使用政策設定閘道資源](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/configure-gateway-resources?hl=zh-tw)
