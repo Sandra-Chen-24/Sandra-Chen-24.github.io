@@ -8,3 +8,7 @@ categories = ["k8s"]
 +++
 
 Deployment's label selector is immutable after it gets created.
+
+## 查看 NS 還有什麼資源殘留
+kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n ${NS}
+
