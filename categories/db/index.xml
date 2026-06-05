@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DB on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/db/</link><description>Recent content in DB on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 15 May 2026 10:00:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/db/index.xml" rel="self" type="application/rss+xml"/><item><title>Redis 調整最大 client 數量</title><link>https://sandra-chen-24.github.io/blog/redis/redis/</link><pubDate>Fri, 15 May 2026 10:00:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/redis/redis/</guid><description>&lt;h2 id="尋找服務名稱">尋找服務名稱
+&lt;/h2>&lt;p>systemctl list-units &amp;ndash;type=service | grep redis
+-&amp;gt; redis.service&lt;/p>
+&lt;h2 id="limitnofile-設定-default10032">LimitNOFILE 設定 [default:10032]
+&lt;/h2>&lt;p>sudo vi /etc/systemd/system/redis.service&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>[Service]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>LimitNOFILE=20000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="tcp-backlog-設定-default511">tcp-backlog 設定 [default:511]
+&lt;/h2>&lt;p>sudo vi /usr/local/redis/redis.conf&lt;/p>
+&lt;h2 id="重啟-redis">重啟 REDIS
+&lt;/h2>&lt;p>sudo systemctl daemon-reload
+sudo systemctl restart redis&lt;/p>
+&lt;h3 id="確認當下redis設定">確認當下REDIS設定
+&lt;/h3>&lt;p>redis-cli -a ${PWD} info clients
+redis-cli -a ${PWD} CONFIG GET maxclients&lt;/p>
+&lt;h2 id="調整-linux-system-設定">調整 Linux system 設定
+&lt;/h2>&lt;p>sudo vi /etc/sysctl.d/99-sysctl.conf&lt;/p>
+&lt;p>net.core.somaxconn default:4096
+net.ipv4.tcp_max_syn_backlog default:512
+net.core.netdev_max_backlog default:1000
+net.ipv4.tcp_keepalive_time default:7200
+net.ipv4.tcp_keepalive_intvl default:75
+net.ipv4.tcp_keepalive_probes default:9&lt;/p>
+&lt;h3 id="確認當下環境設定-sysctl-參數名稱">確認當下環境設定 sysctl ${參數名稱}
+&lt;/h3>&lt;p>e.g. sysctl net.core.somaxconn&lt;/p></description></item></channel></rss>

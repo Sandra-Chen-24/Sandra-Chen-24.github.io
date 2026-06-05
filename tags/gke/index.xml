@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gke on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/gke/</link><description>Recent content in Gke on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Tue, 16 Dec 2025 10:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/gke/index.xml" rel="self" type="application/rss+xml"/><item><title>Custom Compute Class</title><link>https://sandra-chen-24.github.io/blog/gcp/custom-compute-class/</link><pubDate>Tue, 16 Dec 2025 10:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/gcp/custom-compute-class/</guid><description>&lt;h2 id="custom-compute-classhttpsdocscloudgooglecomkubernetes-enginedocsconceptsabout-custom-compute-classeshlzh-twhow-custom">&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#how-custom" target="_blank" rel="noopener"
+>Custom Compute Class&lt;/a>
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>🚫 限制 ComputeClass 的名稱開頭不得為 gke 或 autopilot&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>自動替換為更適合的節點設定 [activeMigration]&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Enable NAP (Node auto-provisioning) per class，依照 cluster 版本設定方式不同&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>GKE 1.33.3-gke.1136000 以上版本 [nodePoolAutoCreation]&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>GKE 1.33.3-gke.1136000 以下版本:啟用叢集層級的節點自動佈建功能 [Node auto-provisioning]&lt;/p>
+&lt;ul>
+&lt;li>cluster 版本大於要求，但 nodepool 小於要求，自動長出來的 nodepool 會跟 cluster 同版本&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>版本 (Version)：
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>預設情況下，自動產生的節點池版本會跟隨叢集的控制面版本
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>區域 (Zones)：
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>如果調整 Default node zones 為多區（如 a, b, c），自動產生的節點池通常會涵蓋這些區域，
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>因為 GKE 會根據叢集配置來建立對應區域的受控執行個體群組 (GKE Node Pool)。
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>除非在 ComputeClass 的 priorities 中有明確限制 location.zones，否則會優先遵循叢集的區域設定
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">cloud.google.com/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ComputeClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">accelerator&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolAutoCreation&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">gpu&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">nvidia-tesla-a100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">count&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">location&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">zones&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;us-central1-a&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;us-central1-b&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">whenUnsatisfiable&lt;/span>: &lt;span style="color:#ae81ff">DoNotScaleUp&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>如果 CCC 沒有指定 zone 那會依照 default node zones，建議可以類似以下這樣寫&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># a 區用完的話就會failback 到 b or c 區&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">cloud.google.com/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ComputeClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">accelerator-ai-preferred&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolAutoCreation&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># --- Priority 1: ---&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">gpu&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">nvidia-tesla-a100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">count&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">location&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">zones&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;us-central1-a&amp;#34;&lt;/span> &lt;span style="color:#75715e"># Specify your target AI Zone&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># --- Priority 2: ---&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">gpu&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">nvidia-tesla-a100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">count&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">location&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">zones&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;us-central1-b&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;us-central1-c&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">whenUnsatisfiable&lt;/span>: &lt;span style="color:#ae81ff">DoNotScaleUp&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>定義自動調度資源的門檻和參數，以便移除未充分利用的節點 [autoscalingPolicy]&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>使用預約資源 [reservations]&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>內建的 ComputeClass：在 Standard 叢集中執行 Autopilot 模式工作負載 &lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-built-in-compute-classes?hl=zh-tw" target="_blank" rel="noopener"
+>適用於 1.34.1-gke.1829001 以上版本&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>autopilot&lt;/li>
+&lt;li>autopilot-spot&lt;/li>
+&lt;li>建立自訂 Autopilot ComputeClass&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">autopilot&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>在工作負載資訊清單中選取 ComputeClass，方法是使用 cloud.google.com/compute-class 標籤&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">apps/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">Deployment&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">template&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeSelector&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Replace with the name of a compute class&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cloud.google.com/compute-class&lt;/span>: &lt;span style="color:#ae81ff">COMPUTE_CLASS&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="activemigration">activeMigration
+&lt;/h3>&lt;ul>
+&lt;li>自動產生的 node 前綴會是 nap- (for Node Auto-Provisioning)&lt;/li>
+&lt;li>選用自動調度資源功能，可自動以新節點取代現有節點。節點會根據特定條件替換，具體取決於遷移類型，GKE 會建立新節點，然後排空並刪除舊節點
+&lt;ul>
+&lt;li>🚫 遷移作業不會遷移儲存在永久儲存空間中的資料，例如 Compute Engine 永久磁碟。為盡量降低資料遺失風險，請勿在有狀態工作負載使用的 ComputeClass 中啟用主動遷移功能&lt;/li>
+&lt;li>🚫 如果節點無法移除，進行中的遷移作業不會取代這些節點。舉例來說，如果主動遷移會違反 &amp;ndash;min-nodes 節點集區設定，就不會取代節點&lt;/li>
+&lt;li>🚫 為避免重要工作負載中斷，遷移作業不會移動下列 Pod：
+&lt;ul>
+&lt;li>設定 PodDisruptionBudget 的 Pod，如果移動作業會超出 PodDisruptionBudget&lt;/li>
+&lt;li>具有 cluster-autoscaler.kubernetes.io/safe-to-evict: &amp;ldquo;false&amp;rdquo; 註解的 Pod&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>支援的有效遷移類型如下：
+&lt;ul>
+&lt;li>optimizeRulePriority：以優先順序清單中較高的節點，取代 ComputeClass 優先順序清單中較低的節點&lt;/li>
+&lt;li>ensureAllDaemonSetPodsRunning：以較大的節點取代具有無法排程的 DaemonSet Pod 的節點，這些節點能夠執行所有必要的 DaemonSet Pod&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="autoscalingpolicy">autoscalingPolicy
+&lt;/h3>&lt;ul>
+&lt;li>微調觸發節點移除和工作負載整併的資源使用率不足門檻&lt;/li>
+&lt;li>可以微調下列參數：
+&lt;ul>
+&lt;li>consolidationStrategy：
+&lt;ul>
+&lt;li>OptimizePrice：GKE 會不斷掃描叢集。如果發現把 Pod 移到更便宜的機器（例如從 On-demand 移到 Spot）或縮減節點數量可以省錢，它就會主動執行&lt;/li>
+&lt;li>Disabled：節點一旦長出來，除非上面完全沒 Pod 了，否則不會主動縮編&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>consolidationDelayMinutes：GKE 移除使用率不足的節點前，等待的分鐘數 [預設值：通常為 15 分鐘]&lt;/li>
+&lt;li>consolidationThreshold：CPU 和記憶體的使用率門檻，以節點可用資源的百分比表示。只有在資源使用率低於這個門檻時，GKE 才會考慮移除節點&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="whenunsatisfiable">whenUnsatisfiable
+&lt;/h3>&lt;ul>
+&lt;li>ScaleUpAnyway: ComputeClass 優先順序中沒有的機器系列，會觸發節點建立作業，GKE 1.33 之前的預設值&lt;/li>
+&lt;li>DoNotScaleUp: ComputeClass 優先順序中沒有的機器系列，不會觸發節點建立作業，GKE 1.33 以上版本的預設值&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">cloud.google.com/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ComputeClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: {{ &lt;span style="color:#ae81ff">.name }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">activeMigration&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">optimizeRulePriority&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolAutoCreation&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">nodepools&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">arm-default-pool&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">c4a-highmem-4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spot&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">n2-highmem-4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spot&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">c4a-highmem-4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">n2-highmem-4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">autoscalingPolicy&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">consolidationDelayMinutes&lt;/span>: &lt;span style="color:#ae81ff">5&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="prioritieshttpsdocscloudgooglecomkubernetes-enginedocsconceptsabout-custom-compute-classeshlzh-twpriority-rules">&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#priority-rules" target="_blank" rel="noopener"
+>priorities&lt;/a>
+&lt;/h2>&lt;ul>
+&lt;li>machineFamily&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spot&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">minCores&lt;/span>: &lt;span style="color:#ae81ff">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">minMemoryGb&lt;/span>: &lt;span style="color:#ae81ff">64&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bootDiskKMSKey&lt;/span>: &lt;span style="color:#ae81ff">projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">secondaryBootDisks&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">diskImageName&lt;/span>: &lt;span style="color:#ae81ff">pytorch-mnist&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">project&lt;/span>: &lt;span style="color:#ae81ff">k8s-staging-jobset&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>machineType&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">n4-standard-32&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spot&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bootDiskType&lt;/span>: &lt;span style="color:#ae81ff">pd-balanced&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bootDiskSize&lt;/span>: &lt;span style="color:#ae81ff">250&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">localSSDCount&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bootDiskKMSKey&lt;/span>: &lt;span style="color:#ae81ff">projects/example/locations/us-central1/keyRings/example/cryptoKeys/key-1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#manual-node-pools" target="_blank" rel="noopener"
+>nodepools&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>🚫 這個欄位僅支援 GKE Standard 模式&lt;/li>
+&lt;li>手動建立的 nood pool 要加上 Kubernetes 標籤 &amp;amp; taint
+cloud.google.com/compute-class: {ComputeClass}&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/reference/crds/computeclass#priorityDefaults" target="_blank" rel="noopener"
+>priorityDefaults&lt;/a> [TODO]&lt;/p>
+&lt;ul>
+&lt;li>GKE 1.32.1-gke.1729000 以上版本&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="reservationshttpsdocscloudgooglecomcomputedocsinstancesreservations-overviewhlzh-tw-todo">&lt;a class="link" href="https://docs.cloud.google.com/compute/docs/instances/reservations-overview?hl=zh-tw" target="_blank" rel="noopener"
+>reservations&lt;/a> [TODO]
+&lt;/h3>&lt;ul>
+&lt;li>Cloud 區域的硬體可用性，則可以在自訂 ComputeClass 中設定每個備援優先順序，讓 GKE 在建立新節點時使用預留資源，⭐ 適用於 GKE 1.31.1-gke.2105000 以上版本
+&lt;ul>
+&lt;li>必須使用節點集區自動建立功能，GKE 才能使用預留資源建立新節點&lt;/li>
+&lt;li>只有在定義 machineType 或 machineFamily 時，才能使用非 TPU 預留項目&lt;/li>
+&lt;li>設定本機 SSD 的 ComputeClass 必須使用 machineType 優先順序規則，而非 machineFamily，必須明確包含 localSSDCount: 欄位&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">cloud.google.com/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ComputeClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">shared-specific-reservations&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolAutoCreation&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reservations&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">specific&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">n4-shared-reservation&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">project&lt;/span>: &lt;span style="color:#ae81ff">reservation-project&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">affinity&lt;/span>: &lt;span style="color:#ae81ff">Specific ⭐ 必須為 Specific&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineType&lt;/span>: &lt;span style="color:#ae81ff">a3-highgpu-1g&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">storage&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">localSSDCount&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">gpu&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">nvidia-h100-80gb&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">count&lt;/span>: &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reservations&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">affinity&lt;/span>: &lt;span style="color:#ae81ff">AnyBestEffort ⭐ 任何相符的預訂&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">spot&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">whenUnsatisfiable&lt;/span>: &lt;span style="color:#ae81ff">DoNotScaleUp&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="nodepoolgroup-todo">nodePoolGroup [TODO]
+&lt;/h3>&lt;ul>
+&lt;li>將多個節點集區分組為單一邏輯單元，稱為「集合」。這個分組功能可讓您將共用設定套用至多個節點集區&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>NodePoolGroup 主要用途在 TPU 訓練或 HPC 相關的任務，確保保算力「同進同出」
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>設定方式：workloadType: HIGH_THROUGHPUT 搭配 nodePoolGroup
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>告訴 GKE 這群 Node Pools 是生命共同體，如果需要維護或調度，GKE 會傾向讓它們保持全體在線的狀態，少了一部分節點可能導致整個訓練任務卡住
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>如果是一般 API 或 Microservice 其實不一定會用到
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolGroup&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">my-tpu-collection&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="nodepoolconfighttpsdocscloudgooglecomkubernetes-enginedocsconceptsabout-custom-compute-classeshlzh-twnode_pool_configuration-todo">&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/about-custom-compute-classes?hl=zh-tw#node_pool_configuration" target="_blank" rel="noopener"
+>nodePoolConfig&lt;/a> [TODO]
+&lt;/h3>&lt;h3 id="預設-computeclasshttpsdocscloudgooglecomkubernetes-enginedocshow-torun-pods-default-compute-classeshlzh-tw">&lt;a class="link" href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/run-pods-default-compute-classes?hl=zh-tw" target="_blank" rel="noopener"
+>預設 ComputeClass&lt;/a>
+&lt;/h3>&lt;ul>
+&lt;li>
+&lt;p>可以將 GKE 叢集或特定命名空間設定為具有預設 ComputeClass&lt;/p>
+&lt;ul>
+&lt;li>將 ComputeClass 設為叢集層級的預設值，叢集必須執行 GKE 1.33.1-gke.1744000 以上版本&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">cloud.google.com/v1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ComputeClass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">default&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">priorities&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">machineFamily&lt;/span>: &lt;span style="color:#ae81ff">n2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">whenUnsatisfiable&lt;/span>: &lt;span style="color:#ae81ff">ScaleUpAnyway&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodePoolAutoCreation&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">enabled&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>gcloud container clusters update CLUSTER_NAME \
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --location=CONTROL_PLANE_LOCATION \
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --enable-default-compute-class
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>將 ComputeClass 設為命名空間層級的預設值，但僅適用於非 DaemonSet Pod，叢集必須執行 GKE 1.33.1-gke.1788000 以上版本&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>kubectl label namespaces NAMESPACE_NAME \
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cloud.google.com/default-compute-class=COMPUTECLASS_NAME
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">⚠️ pod 建立後這樣做不會有異常&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#ae81ff">把 deploy 的 ComputeClass 刪掉 → ComputeClass 不可編輯，調整時可以暫時刪除&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#ae81ff">ComputeClass 被刪除後，殘留的 node pool 不會自動消失&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">⭐ CCC 自動產生的 nodepool 預設 zone 跟 cluster 一致，但當該 zone 長不出來時，會長其他&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="resourceflavorhttpskueuesigsk8siozh-cndocsconceptsresource_flavor">&lt;a class="link" href="https://kueue.sigs.k8s.io/zh-cn/docs/concepts/resource_flavor/" target="_blank" rel="noopener"
+>ResourceFlavor&lt;/a>
+&lt;/h2>&lt;ul>
+&lt;li>當不再只是單純地想讓 Pod 「有地方跑」，而是想要精細化管理不同類型的計算資源（如 GPU 型號、Spot 執行個體、不同 CPU 架構）時，就會需要 ResourceFlavor
+&lt;ul>
+&lt;li>
+&lt;p>Kueue + ResourceFlavor： 在任務排隊階段就先檢查想用的資源，如果配額滿了，任務會直接在隊列中等待，而不是去跟 K8s 調度器硬碰硬，減少了叢集壓力並提高了公平性&lt;/p>
+&lt;ul>
+&lt;li>針對 Spot 資源與 On-Demand 資源的 Kueue 配置範例&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Spot 資源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">kueue.x-k8s.io/v1beta1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ResourceFlavor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">spot-flavor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeLabels&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cloud.google.com/gke-spot&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;true&amp;#34;&lt;/span> &lt;span style="color:#75715e"># 確保任務只會跑在標記為 Spot 的節點上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># On-Demand 資源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">kueue.x-k8s.io/v1beta1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ResourceFlavor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#66d9ef">on&lt;/span>-&lt;span style="color:#ae81ff">demand-flavor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nodeLabels&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cloud.google.com/gke-spot&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;false&amp;#34;&lt;/span> &lt;span style="color:#75715e"># 確保任務跑在一般節點上&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 定義 ClusterQueue (全域配額管理)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">kueue.x-k8s.io/v1beta1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">ClusterQueue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">combined-cluster-queue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">namespaceSelector&lt;/span>: {} &lt;span style="color:#75715e"># 允許所有 namespace 使用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resourceGroups&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">coveredResources&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;cpu&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;memory&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">flavors&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">spot-flavor &lt;/span> &lt;span style="color:#75715e"># 放在第一個，代表優先使用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resources&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cpu&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nominalQuota&lt;/span>: &lt;span style="color:#ae81ff">100&lt;/span> &lt;span style="color:#75715e"># Spot 總共給 100 核心&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;memory&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nominalQuota&lt;/span>: &lt;span style="color:#ae81ff">400Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#66d9ef">on&lt;/span>-&lt;span style="color:#ae81ff">demand-flavor&lt;/span> &lt;span style="color:#75715e"># 放在第二個，作為備援&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">resources&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cpu&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nominalQuota&lt;/span>: &lt;span style="color:#ae81ff">50&lt;/span> &lt;span style="color:#75715e"># On-Demand 較貴，只給 50 核心&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;memory&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nominalQuota&lt;/span>: &lt;span style="color:#ae81ff">200Gi&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 使用(LocalQueue)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">apiVersion&lt;/span>: &lt;span style="color:#ae81ff">kueue.x-k8s.io/v1beta1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">kind&lt;/span>: &lt;span style="color:#ae81ff">LocalQueue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">metadata&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">team-a-queue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">namespace&lt;/span>: &lt;span style="color:#ae81ff">team-a&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spec&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">clusterQueue&lt;/span>: &lt;span style="color:#ae81ff">combined-cluster-queue&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="tfk8s">tfk8s
+&lt;/h2>&lt;ul>
+&lt;li>用途：把現有的 Kubernetes YAML 轉換成 Terraform&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code># 直接將現有的 ComputeClass 轉成 TF
+kubectl get computeclass highmem-xxx -o yaml | tfk8s -m
+&lt;/code>&lt;/pre>&lt;h2 id="參考文章">參考文章
+&lt;/h2>&lt;p>&lt;a class="link" href="https://medium.com/google-cloud/practical-guide-to-kueue-and-custom-compute-classes-85a3fe287487" target="_blank" rel="noopener"
+>Practical Guide to Kueue and Custom Compute Classes&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://docs.cloud.google.com/compute/docs/instances/committed-use-discounts-overview?hl=zh-tw#spend_based" target="_blank" rel="noopener"
+>Compute Flexible CRDs&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/vszal/gke-custom-compute-class-examples" target="_blank" rel="noopener"
+>GKE Custom Compute Class Examples&lt;/a>&lt;/p></description></item></channel></rss>

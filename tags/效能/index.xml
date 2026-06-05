@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>效能 on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/tags/%E6%95%88%E8%83%BD/</link><description>Recent content in 效能 on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Fri, 22 May 2026 10:00:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/tags/%E6%95%88%E8%83%BD/index.xml" rel="self" type="application/rss+xml"/><item><title>nginx 長連線</title><link>https://sandra-chen-24.github.io/blog/nginx/nginx/</link><pubDate>Fri, 22 May 2026 10:00:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/nginx/nginx/</guid><description>&lt;p>Nginx 預設的隱藏行為：當使用 proxy_pass 把請求轉發給後端（例如你的 Go, Node.js 或 Java 服務）時，會將 HTTP 協定降級為 HTTP/1.0，並且會隱含地把 Connection 標頭設定為 close
+-&amp;gt; 在 Nginx 設定了 proxy_set_header Connection &amp;ldquo;&amp;quot;;，把預設要發送給後端的 Connection: close 標頭直接抹除（不發送），當後端服務收到一個 HTTP/1.1 的請求，且裡面沒有 Connection: close 標頭時，後端服務就會預設啟用 Keep-Alive，允許這個 TCP 連線繼續留著給下一個請求使用 [必須搭配 proxy_http_version 與 keepalive 一起使用]&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>upstream my_backend {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> server 127.0.0.1:8080;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 1. 💡 關鍵：設定 Nginx 與後端連線池的「最大空閒長連線數」
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> keepalive 32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>server {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> listen 80;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> location / {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> proxy_pass http://my_backend;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 2. 💡 關鍵：強制將轉發協定改為 HTTP/1.1（1.0 不支援連線池保持）
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> proxy_http_version 1.1;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 3. 💡 關鍵：清空 Connection 標頭，防止 Nginx 預設發送 &amp;#34;close&amp;#34;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> proxy_set_header Connection &amp;#34;&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>upstream u_aaa {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> server slot-frontend-aaa-ci:80;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> keepalive 32;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> keepalive_requests 1000;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> keepalive_timeout 60s;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># 精準比對與強制補斜線，輸入 https://domain.com/aaa（結尾沒斜線）時，會精準命中這一條
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># Nginx 回傳 308 Permanent Redirect，強迫瀏覽器重導向到帶有斜線的 https://domain.com/aaa/，並完整保留原本的 URL 參數
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>💡 為什麼用 308 而不用 301？ 308 可以確保瀏覽器在重導向時，不會把原本的 POST 請求偷偷變成 GET 請求，這在 API 路由中非常安全
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>location = /aaa {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return 308 https://$host/aaa/$is_args$args;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>location /aaa/ {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 處理 OPTIONS 預檢請求
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> if ($request_method = OPTIONS) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_header &amp;#39;Access-Control-Max-Age&amp;#39; 1728000; # 快取 20 天
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_header &amp;#39;Content-Type&amp;#39; &amp;#39;text/plain; charset=UTF-8&amp;#39;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> add_header &amp;#39;Content-Length&amp;#39; 0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> return 204;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> # 網址路徑替換，使用者訪問：/aaa/index.html，實際轉發給後端：/lucky/index.html
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> proxy_pass http://u_aaa/lucky/;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>

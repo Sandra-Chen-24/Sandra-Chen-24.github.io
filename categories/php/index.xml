@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Php on Sandra Chen Blog</title><link>https://sandra-chen-24.github.io/categories/php/</link><description>Recent content in Php on Sandra Chen Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-tw</language><lastBuildDate>Mon, 09 Mar 2026 11:30:00 +0800</lastBuildDate><atom:link href="https://sandra-chen-24.github.io/categories/php/index.xml" rel="self" type="application/rss+xml"/><item><title>php 版本設定</title><link>https://sandra-chen-24.github.io/blog/php/php/</link><pubDate>Mon, 09 Mar 2026 11:30:00 +0800</pubDate><guid>https://sandra-chen-24.github.io/blog/php/php/</guid><description>&lt;h2 id="module-跟版本確認">module 跟版本確認
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span># module
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>php -m | grep -E &amp;#34;redis|mongodb|grpc|opentelemetry&amp;#34;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># module 版本
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>php -r &amp;#39;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> $exts = [&amp;#34;redis&amp;#34;, &amp;#34;mongodb&amp;#34;, &amp;#34;grpc&amp;#34;, &amp;#34;opentelemetry&amp;#34;];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> foreach ($exts as $ext) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> if (extension_loaded($ext)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> $version = phpversion($ext);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo str_pad($ext, 15) . &amp;#34;: $version\n&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } else {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo str_pad($ext, 15) . &amp;#34;: Not Installed\n&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
