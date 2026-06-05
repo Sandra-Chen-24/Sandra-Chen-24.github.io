@@ -31,7 +31,7 @@ jobs:
       - name: Install theme
         run: |
           rm -rf themes/hugo-theme-stack
-          git clone https://github.com/CaiJimmy/hugo-theme-stack themes/hugo-theme-stack
+          git clone --branch v3.30.0 https://github.com/CaiJimmy/hugo-theme-stack themes/hugo-theme-stack
 
       - name: Build
         run: hugo --minify
