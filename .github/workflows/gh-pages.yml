@@ -22,7 +22,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: "0.155.0" # 建議 Extended 穩定版
+          hugo-version: "0.123.8" # 建議 Extended 穩定版
           extended: true # 要支援 SCSS/SASS 必須加這個
 
       - name: Install theme
