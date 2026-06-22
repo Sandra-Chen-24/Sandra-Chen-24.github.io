@@ -62,3 +62,7 @@ categories = ["cert-manager"]
     annotations:
         reflector.v1.k8s.emberstack.com/auto-reflects: "True"
     ```
+
+
+# 檢查憑證包含哪些 Domain
+openssl x509 -in vgtpwsn.shop-crt.pem -noout -text | grep -A2 "Subject Alternative Name"

@@ -1,7 +1,20 @@
 baseURL = "https://sandra-chen-24.github.io/"
-languageCode = "zh-tw"
 title = "Sandra Chen Blog"
 theme = "hugo-theme-stack"
+defaultContentLanguage = "zh-tw"
+[languages]
+  [languages.zh-tw]
+    languageCode = "zh-tw"
+    locale = "zh-tw"
+    languageName = "繁體中文"
+    weight = 1
+
+  [languages.zh-cn]
+    languageCode = "zh-cn"
+    locale = "zh-cn"
+    languageName = "简体中文"
+    weight = 2
+
 [pagination]
   pagerSize = 5
 
