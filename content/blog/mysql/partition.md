@@ -39,6 +39,24 @@ ALTER TABLE aaa_clone IMPORT TABLESPACE;
 ## 用 UI Import
 ⚠️ 超級慢
 
+## 先把資料 Export 出來
+### 切割成小檔案
+```text
+tail -n +2 slotWagers-0531.csv | split -l 300000 - "split_temp_" && for f in split_temp_*; do head -n 1 slotWagers-0531.csv | cat - "$f" > "slotWagers-0531-${f#split_temp_}.csv" && rm "$f"; done
+```text
+
+### 批量倒入資料表 [300000筆大概兩分鐘]
+```text
+LOAD DATA LOCAL INFILE '/path/to/your/file.csv'
+INTO TABLE your_table_name
+CHARACTER SET utf8mb4           -- 🎯 指定檔案編碼（防止中文亂碼）
+FIELDS TERMINATED BY ','        -- 🎯 欄位與欄位之間的分隔符號（CSV 通常是逗號）
+ENCLOSED BY '"'                 -- 🎯 欄位是否用雙引號包起來（選填）
+LINES TERMINATED BY '\n'        -- 🎯 換行符號（Windows 常用 \r\n，Linux 常用 \n）
+IGNORE 1 LINES                  -- 🎯 跳過第一行（通常第一行是標題欄位名）
+(col1, col2, col3);             -- 🎯 對應資料表的實體欄位順序（選填）
+```
+
 ## 用指令
 INSERT INTO ${table_name}_TestPartitions SELECT * FROM ${table_name} WHERE DATE(created_at) = "2026-03-26";
 ```
@@ -122,6 +140,14 @@ REORGANIZE PARTITION p202607a INTO (
     PARTITION p202607a VALUES LESS THAN ('2026-07-16 00:00:00')
 );
 
+❗ p202607a 放錯區，應該要放到 p202606b
+ALTER TABLE ${table_name}
+REORGANIZE PARTITION p202603b, p202604a, p202604b, p202605a INTO (
+    -- 🎯 將這四個舊分區打包成一個大分區，名字沿用 p202605a
+    -- ⚠️ 邊界時間必須設定為原本 p202605a 的時間點（例如 2026-05-16）
+    PARTITION p202605a VALUES LESS THAN ('2026-05-16 00:00:00')
+);
+
 ## 刪除過期 partition
 ALTER TABLE ${table_name} DROP PARTITION p202605a;
 ⚠️ DROP PARTITION 會刪除該 partition 內所有資料
@@ -199,7 +225,7 @@ BEGIN
         IF NOT EXISTS (
             SELECT 1 FROM information_schema.partitions 
             WHERE table_name = 'MainWagers_TestPartitions' -- 請替換成你的實體資料表名稱
-              AND partition_name = v_p_name_b -- 已修正：拔除不小心打錯的 powershell 髒字
+              AND partition_name = v_p_name_b
         ) THEN
             -- 發現破洞，立刻從 pmax 重新切分出來
             SET v_sql = CONCAT(
@@ -250,3 +276,5 @@ SELECT
     LAST_EXECUTED AS '上一次執行時間'
 FROM information_schema.EVENTS 
 WHERE EVENT_SCHEMA = DATABASE();
+
+DROP EVENT IF EXISTS event_name;
