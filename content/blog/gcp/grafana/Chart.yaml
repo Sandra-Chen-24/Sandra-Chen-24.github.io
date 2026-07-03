@@ -1,0 +1,12 @@
+apiVersion: v2
+name: my-monitoring-stack
+description: A Helm chart for my Kubernetes monitoring stack including Grafana
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: grafana
+    version: "8.5.2"   # 💡 記得用你剛才查到的實際 Chart 版本
+    repository: "https://grafana-community.github.io/helm-charts"
+    condition: grafana.enabled  # 👈 補上這一行，讓 values.yaml 擁有掌控權

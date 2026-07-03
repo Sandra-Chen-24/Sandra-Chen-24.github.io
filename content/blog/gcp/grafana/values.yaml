@@ -1,0 +1,13 @@
+grafana:
+  enabled: true # 👈 預設開啟部署。未來如果想關閉，只要在這裡改成 false 即可！
+
+  # 下方保持你原本的硬碟與 Sidecar 設定
+  persistence:
+    enabled: true
+    storageClassName: "standard-rwo"
+    size: 10Gi
+
+  sidecar:
+    dashboards:
+      enabled: true # 啟動 Sidecar 監聽程式
+      label: grafana_dashboard # 利用 K8s API，在 Namespace 裡巡邏，尋找所有帶有 grafana_dashboard 標籤的 ConfigMap

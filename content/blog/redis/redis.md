@@ -42,3 +42,11 @@ net.ipv4.tcp_keepalive_probes default:9
 
 ### 確認當下環境設定 sysctl ${參數名稱}
 e.g. sysctl net.core.somaxconn
+
+### maxmemory-policy
+noeviction（預設值）:記憶體滿了的時候，Redis 直接報錯拒絕寫入，不主動刪除任何資料
+allkeys-lru 或 volatile-lru:記憶體滿了的時候，Redis 會把最少用到的舊快取丟掉，確保新資料寫得進去
+
+### maxmemory
+CONFIG SET maxmemory 512mb
+CONFIG REWRITE # 將設定寫入 redis.conf 檔案中（永久生效，下次開機不重置，當下不會重啟 Redis）
