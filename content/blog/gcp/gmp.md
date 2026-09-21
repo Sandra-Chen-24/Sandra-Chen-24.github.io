@@ -185,3 +185,5 @@ metrics:
 ```text
 sudo systemctl restart google-cloud-ops-agent
 ```
+
+⚠️ GCP GKE 叢集使用的是 「Google Cloud Managed Service for Prometheus (GMP)」，原生監控不理會 ServiceMonitor
