@@ -59,6 +59,18 @@ ps aux | grep -E "otel|fluent"
 ⭐ 檢查沒有跑一樣的實例
 # 重啟 GCP Ops Agent，徹底重置打架的監控緩衝區
 sudo systemctl restart google-cloud-ops-agent
+
+⭐ log 容量計算
+👉 responseSize 單位是 Bytes
+👉 Bytes / (1024*1024*1024) = GiB
+👉 timestamp 差 8 hr e.g. 下列查詢為 13:20 - 13:21
+gcloud logging read 'resource.type="http_load_balancer" AND resource.labels.backend_service_name="as-prod-gameserver-ws-neg-backend-service" AND jsonPayload.statusDetails="websocket_closed" AND timestamp>="2026-09-21T05:20:00Z" AND timestamp<="2026-09-21T05:21:00Z"'   --format="json"   --project="apsys-studio" |   jq '[.[].httpRequest.responseSize | tonumber] | add / (1024*1024*1024) '
+
+✨ 效能比較好
+gcloud logging read 'resource.type="http_load_balancer" AND resource.labels.backend_service_name="as-prod-gameserver-ws-neg-backend-service" AND timestamp>="2026-09-21T09:00:00Z" AND timestamp<="2026-09-22T05:00:00Z"' \
+  --project="apsys-studio" \
+  --format="value(httpRequest.responseSize)" | \
+  awk '{sum+=$1} END {print sum/(1024*1024*1024) " GB"}'
 ```
 
 
